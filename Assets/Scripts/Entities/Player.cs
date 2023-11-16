@@ -65,4 +65,12 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
+
+    public PlayerInfo GetPlayerInfo()
+    {
+        PlayerInfo info = new PlayerInfo(this);
+
+        return info;
+    }
+
 }
