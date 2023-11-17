@@ -11,16 +11,16 @@ public class Server
     private Socket _socket;
     private EndPoint _endPoint;
 
-    private byte[] _bufferRecive;
-    private ArraySegment<byte> _bufferReciveSegment;
+    private byte[] _bufferReceive;
+    private ArraySegment<byte> _bufferReceiveSegment;
 
     public bool _connected = true;
     public bool _running = true;
 
     public void Initialize()
     {
-        _bufferRecive = new byte[4096];
-        _bufferReciveSegment = new(_bufferRecive);
+        _bufferReceive = new byte[4096];
+        _bufferReceiveSegment = new(_bufferReceive);
 
         _endPoint = new IPEndPoint(IPAddress.Any, PORT);
 
@@ -32,19 +32,20 @@ public class Server
     {
         _socket.Bind(_endPoint);
 
-        Thread recibeThread = new Thread(Recibe);
+        Thread recibeThread = new Thread(Recieve);
         recibeThread.Start();
 
         return NetworkFeedback.SERVER_SUCCESS;
     }
 
-    #region Recibe
-    private void Recibe()
+    #region Recieve
+    private void Recieve()
     {
         try
         {
             while (_connected)
             {
+                //DESERIALIZE CLIENT INFO AND UPDATE IT TO GAMEMANAGER'S CLIENT PLAYER
 
             }
         }
@@ -64,6 +65,10 @@ public class Server
     #region Send
     private void Send()
     {
+
+        // SEND GAMEINFO FROM HOST  // OPTIONAL AND GAMEINFO FROM CLIENT IN SERVER
+
+        //Serialize
 
     }
     #endregion

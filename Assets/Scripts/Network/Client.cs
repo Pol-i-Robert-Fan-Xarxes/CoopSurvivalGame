@@ -13,8 +13,8 @@ public class Client
     private Socket _socket;
     private EndPoint _endPoint;
 
-    private byte[] _bufferRecive;
-    private ArraySegment<byte> _bufferReciveSegment;
+    private byte[] _bufferReceive;
+    private ArraySegment<byte> _bufferReceiveSegment;
 
     public bool _connected = false;
     public bool _running = true;
@@ -29,8 +29,8 @@ public class Client
 
     public void Initialize()
     {
-        _bufferRecive = new byte[4096];
-        _bufferReciveSegment = new(_bufferRecive);
+        _bufferReceive = new byte[4096];
+        _bufferReceiveSegment = new(_bufferReceive);
 
         _endPoint = new IPEndPoint(_hostIPAddress, PORT);
 
@@ -46,7 +46,7 @@ public class Client
             _socket.Connect(_endPoint);
             _connected = true;
 
-            Thread recibeThread = new Thread(Recibe);
+            Thread recibeThread = new Thread(Recieve);
             recibeThread.Start();
 
             return NetworkFeedback.CONNECTION_SUCCESS;
@@ -58,14 +58,14 @@ public class Client
         }
     }
 
-    #region Recibe
-    private void Recibe()
+    #region Recieve
+    private void Recieve()
     {
         try
         {
             while (_connected)
             {
-
+                // Receive 
             }
         }
         catch (System.Exception e)
@@ -84,7 +84,7 @@ public class Client
     #region Send
     private void Send()
     {
-
+        //
     }
     #endregion
 }

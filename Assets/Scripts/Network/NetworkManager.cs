@@ -16,6 +16,13 @@ public enum NetworkFeedback
     SERVER_SUCCESS
 }
 
+public enum ServerCommand
+{
+    EMPTY,
+    PAUSED,
+    START_GAME
+}
+
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager _instance;
@@ -46,6 +53,7 @@ public class NetworkManager : MonoBehaviour
 
         if (_isHost && !_server._running) _server = null;
         if (!_isHost && !_server._running) _client = null;
+
     }
 
     public NetworkFeedback StartServer()
@@ -76,17 +84,17 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    #region Recibe
-    private void Recibe()
+    #region Recieve
+    private void Recieve()
     {
-
+       
     }
     #endregion
 
     #region Send
     private void Send()
     {
-
+        // Serialize
     }
     #endregion
 
@@ -102,7 +110,6 @@ public class NetworkManager : MonoBehaviour
         //Convert from our InfoStruct to json
         string json = JsonUtility.ToJson(infoToSend);
 
-        data = new byte[json.Length];
         //From Json to byte array
         data = Encoding.ASCII.GetBytes(json);
 
