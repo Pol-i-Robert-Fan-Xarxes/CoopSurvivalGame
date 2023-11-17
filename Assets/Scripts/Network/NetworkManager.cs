@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public enum NetworkFeedback
 {
@@ -26,11 +26,12 @@ public enum ServerCommand
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager _instance;
-    public static NetworkManager GetInstance() 
-    {
-        if (_instance == null) _instance = new NetworkManager();
-        return _instance; 
-    }
+    public static NetworkManager Instance => _instance;
+    //public static NetworkManager GetInstance() 
+    //{
+    //    if (_instance == null) _instance = new NetworkManager();
+    //    return _instance; 
+    //}
 
     private bool _isHost = false;
     public bool _hasSent = false;
@@ -40,7 +41,15 @@ public class NetworkManager : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance == null) _instance = this;
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
@@ -51,8 +60,35 @@ public class NetworkManager : MonoBehaviour
     private void Update()
     {
 
-        if (_isHost && !_server._running) _server = null;
-        if (!_isHost && !_server._running) _client = null;
+        if (_isHost && _server != null && !_server._running) _server = null;
+        if (!_isHost && _client != null && !_client._running) _client = null;
+
+        //JUST FOR TESTING
+        if (_isHost && _server != null)
+        {
+            if (Input.GetKeyDown(KeyCode.F8))
+            {
+                byte[] data = new byte[1024];
+                data = Encoding.ASCII.GetBytes("Bon dia senyor Client.");
+                _server.Send(data);
+            }
+
+            if (Input.GetKeyDown(KeyCode.F1)) 
+            {
+                byte[] data = new byte[1024];
+                data = Encoding.ASCII.GetBytes("/PacoCanviaALaCoolScene48465645189/");
+                _server.Send(data);
+            }
+
+            if(_server._changeOrder) LoadScene();
+        }
+        //JUST FOR TESTING
+        if (Input.GetKeyDown(KeyCode.F9) && !_isHost && _client != null)
+        {
+            byte[] data = new byte[1024];
+            data = Encoding.ASCII.GetBytes("Bon dia senyor Servidor.");
+            _client.Send(data);
+        }
 
     }
 
@@ -85,7 +121,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     #region Recieve
-    private void Recieve()
+    public static void Recieve()
     {
        
     }
@@ -136,4 +172,11 @@ public class NetworkManager : MonoBehaviour
     }
 
     #endregion Serialize/Deserialize
+
+    //JUST FOR TESTING
+    //The following 2 methods will be deleted.
+    public void LoadScene()
+    {
+        SceneManager.LoadScene(1);
+    }
 }

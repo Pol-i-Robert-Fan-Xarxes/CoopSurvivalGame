@@ -20,7 +20,7 @@ public class MainMenuUIController : MonoBehaviour
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI txt_feedback;
 
-    private NetworkManager _networkManager;
+    public NetworkManager _networkManager;
 
     private void Awake()
     {
@@ -33,8 +33,6 @@ public class MainMenuUIController : MonoBehaviour
     void Start()
     {
         txt_feedback.text = "";
-
-        _networkManager = NetworkManager.GetInstance();
     }
 
     // Update is called once per frame

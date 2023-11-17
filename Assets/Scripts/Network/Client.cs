@@ -5,13 +5,15 @@ using System.Net.Sockets;
 using System.Net;
 using UnityEngine;
 using System.Threading;
+using System.Text;
 
 public class Client
 {
     public int PORT = 9050;
 
     private Socket _socket;
-    private EndPoint _endPoint;
+    private IPEndPoint _ipep;
+    private EndPoint _remote;
 
     private byte[] _bufferReceive;
     private ArraySegment<byte> _bufferReceiveSegment;
@@ -21,10 +23,14 @@ public class Client
 
     public IPAddress _hostIPAddress;
 
+    private NetworkManager _networkManager;
+
     public Client(string ip, string port)
     {
         _hostIPAddress = IPAddress.Parse(ip);
         PORT = int.Parse(port);
+
+        _networkManager = NetworkManager.Instance;
     }
 
     public void Initialize()
@@ -32,22 +38,25 @@ public class Client
         _bufferReceive = new byte[4096];
         _bufferReceiveSegment = new(_bufferReceive);
 
-        _endPoint = new IPEndPoint(_hostIPAddress, PORT);
+        _ipep = new IPEndPoint(_hostIPAddress, PORT);
 
-        _socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        _socket.Bind(_endPoint);
-
+        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
     }
 
     public NetworkFeedback ConnectToHost()
     {
         try
         {
-            _socket.Connect(_endPoint);
+            _socket.Connect(_ipep);
+            _remote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
             _connected = true;
 
             Thread recibeThread = new Thread(Recieve);
             recibeThread.Start();
+
+            byte[] data = new byte[1024];
+            data = Encoding.ASCII.GetBytes("Player 2");
+            Send(data);
 
             return NetworkFeedback.CONNECTION_SUCCESS;
         }
@@ -65,7 +74,21 @@ public class Client
         {
             while (_connected)
             {
-                // Receive 
+                int recv = 0;
+                recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
+
+                string msg = Encoding.ASCII.GetString(_bufferReceive, 0, recv);
+
+                Debug.Log("Client Received: " + msg);
+
+                if (msg.Equals("/PacoCanviaALaCoolScene48465645189/"))
+                {
+                    byte[] data = new byte[1024];
+                    data = Encoding.ASCII.GetBytes("/OkayCorazon48465645189/");
+                    Send(data);
+
+                    _networkManager.LoadScene();
+                }
             }
         }
         catch (System.Exception e)
@@ -82,9 +105,10 @@ public class Client
     #endregion
 
     #region Send
-    private void Send()
+    public void Send(byte[] data)
     {
-        //
+        _socket.SendTo(data, data.Length, SocketFlags.None, _ipep);
+        Debug.Log("ClientData Send");
     }
     #endregion
 }

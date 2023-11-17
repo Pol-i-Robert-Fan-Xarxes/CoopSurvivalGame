@@ -3,13 +3,16 @@ using System.Net;
 using System;
 using UnityEngine;
 using System.Threading;
+using System.Text;
 
 public class Server
 {
     public int PORT = 9050;
 
     private Socket _socket;
-    private EndPoint _endPoint;
+    private SocketReceiveMessageFromResult _res;
+    private IPEndPoint _ipep;
+    private EndPoint _remote;
 
     private byte[] _bufferReceive;
     private ArraySegment<byte> _bufferReceiveSegment;
@@ -17,20 +20,32 @@ public class Server
     public bool _connected = true;
     public bool _running = true;
 
+    private NetworkManager _networkManager;
+    public bool _changeOrder = false;
+
+    public Server()
+    {
+        _networkManager = NetworkManager.Instance;
+    }
+
     public void Initialize()
     {
         _bufferReceive = new byte[4096];
         _bufferReceiveSegment = new(_bufferReceive);
 
-        _endPoint = new IPEndPoint(IPAddress.Any, PORT);
+        _ipep = new IPEndPoint(IPAddress.Any, 9050);
 
-        _socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
         
+
+
     }
 
     public NetworkFeedback StartServer()
     {
-        _socket.Bind(_endPoint);
+        _socket.Bind(_ipep);
+        _remote = (EndPoint) new IPEndPoint(IPAddress.Any, 0);
 
         Thread recibeThread = new Thread(Recieve);
         recibeThread.Start();
@@ -47,6 +62,17 @@ public class Server
             {
                 //DESERIALIZE CLIENT INFO AND UPDATE IT TO GAMEMANAGER'S CLIENT PLAYER
 
+                int recv = 0;
+                recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
+
+                string msg = Encoding.ASCII.GetString(_bufferReceive, 0, recv);
+
+                Debug.Log("Server Received: "+msg);
+
+                if (msg.Equals("/OkayCorazon48465645189/"))
+                {
+                    _changeOrder = true;
+                }
             }
         }
         catch(System.Exception e)
@@ -63,12 +89,13 @@ public class Server
     #endregion
 
     #region Send
-    private void Send()
+    public void Send(byte[]data)
     {
-
         // SEND GAMEINFO FROM HOST  // OPTIONAL AND GAMEINFO FROM CLIENT IN SERVER
-
         //Serialize
+
+        _socket.SendTo(data, data.Length, SocketFlags.None, _remote);
+        Debug.Log("ServerData Send");
 
     }
     #endregion
