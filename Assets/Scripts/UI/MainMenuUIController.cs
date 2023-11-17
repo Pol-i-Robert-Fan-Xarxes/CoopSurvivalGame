@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,11 +15,15 @@ public class MainMenuUIController : MonoBehaviour
     [Header("Buttons (some)")]
     [SerializeField] private Button btn_startGame;
 
+    private NetworkManager _networkManager;
+
     private void Awake()
     {
         joinGame.SetActive(false);
         createGame.SetActive(false);
         editor.SetActive(false);
+
+        _networkManager = NetworkManager.GetInstance();
     }
 
     // Start is called before the first frame update
