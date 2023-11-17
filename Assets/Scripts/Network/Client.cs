@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 using UnityEngine;
+using System.Threading;
 
 public class Client
 {
@@ -15,9 +16,16 @@ public class Client
     private byte[] _bufferRecive;
     private ArraySegment<byte> _bufferReciveSegment;
 
-    private bool _connected = true;
+    public bool _connected = false;
+    public bool _running = true;
 
     public IPAddress _hostIPAddress;
+
+    public Client(string ip, string port)
+    {
+        _hostIPAddress = IPAddress.Parse(ip);
+        PORT = int.Parse(port);
+    }
 
     public void Initialize()
     {
@@ -28,6 +36,26 @@ public class Client
 
         _socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         _socket.Bind(_endPoint);
+
+    }
+
+    public NetworkFeedback ConnectToHost()
+    {
+        try
+        {
+            _socket.Connect(_endPoint);
+            _connected = true;
+
+            Thread recibeThread = new Thread(Recibe);
+            recibeThread.Start();
+
+            return NetworkFeedback.CONNECTION_SUCCESS;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error connecting to the server: {e.Message}");
+            return NetworkFeedback.CONNECTION_ERROR;
+        }
     }
 
     #region Recibe
@@ -47,6 +75,8 @@ public class Client
         finally
         {
             _socket.Close();
+            _running = false;
+            Debug.Log("Client Recibe closed!");
         }
     }
     #endregion

@@ -14,7 +14,8 @@ public class Server
     private byte[] _bufferRecive;
     private ArraySegment<byte> _bufferReciveSegment;
 
-    private bool _connected = true;
+    public bool _connected = true;
+    public bool _running = true;
 
     public void Initialize()
     {
@@ -24,10 +25,17 @@ public class Server
         _endPoint = new IPEndPoint(IPAddress.Any, PORT);
 
         _socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        
+    }
+
+    public NetworkFeedback StartServer()
+    {
         _socket.Bind(_endPoint);
 
         Thread recibeThread = new Thread(Recibe);
         recibeThread.Start();
+
+        return NetworkFeedback.SERVER_SUCCESS;
     }
 
     #region Recibe
@@ -47,6 +55,8 @@ public class Server
         finally
         {
             _socket.Close();
+            _running = false;
+            Debug.Log("Server Recibe closed!");
         } 
     }
     #endregion

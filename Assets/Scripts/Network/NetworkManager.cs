@@ -8,10 +8,22 @@ using System.Threading;
 using UnityEngine;
 
 
+public enum NetworkFeedback
+{
+    CONNECTION_ERROR,
+    CONNECTION_SUCCESS,
+    SERVER_ERROR,
+    SERVER_SUCCESS
+}
+
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager _instance;
-    public static NetworkManager GetInstance() { return _instance; }
+    public static NetworkManager GetInstance() 
+    {
+        if (_instance == null) _instance = new NetworkManager();
+        return _instance; 
+    }
 
     private bool _isHost = false;
     public bool _hasSent = false;
@@ -32,17 +44,36 @@ public class NetworkManager : MonoBehaviour
     private void Update()
     {
 
+        if (_isHost && !_server._running) _server = null;
+        if (!_isHost && !_server._running) _client = null;
     }
 
-    public void StartServer()
+    public NetworkFeedback StartServer()
     {
         _isHost = true;
         _server = new Server();
+        _server.Initialize();
+        return _server.StartServer();
     }
 
-    public void ConnectToServer()
+    public NetworkFeedback ConnectToServer(string ip, string port)
     {
+        _isHost = false;
+        _client = new Client(ip, port);
+        _client.Initialize();
+        return _client.ConnectToHost();
+    }
 
+    public void ForceConnectionClose()
+    {
+        if (_isHost)
+        { //Server
+            _server._connected = false;
+        }
+        else
+        { //Client
+            _client._connected = false;
+        }
     }
 
     #region Recibe

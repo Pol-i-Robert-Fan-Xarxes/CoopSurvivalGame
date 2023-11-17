@@ -14,6 +14,11 @@ public class MainMenuUIController : MonoBehaviour
 
     [Header("Buttons (some)")]
     [SerializeField] private Button btn_startGame;
+    [SerializeField] private Button btn_joinCancel;
+    [SerializeField] private Button btn_hostCancel;
+
+    [Header("Text")]
+    [SerializeField] private TextMeshProUGUI txt_feedback;
 
     private NetworkManager _networkManager;
 
@@ -22,14 +27,14 @@ public class MainMenuUIController : MonoBehaviour
         joinGame.SetActive(false);
         createGame.SetActive(false);
         editor.SetActive(false);
-
-        _networkManager = NetworkManager.GetInstance();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        txt_feedback.text = "";
+
+        _networkManager = NetworkManager.GetInstance();
     }
 
     // Update is called once per frame
@@ -38,24 +43,23 @@ public class MainMenuUIController : MonoBehaviour
         
     }
 
+    
+
     #region MainMenu
     public void OnJoinGamePointerEnter()
     {
-        Debug.Log("JoinGame");
         joinGame.SetActive(true);
         createGame.SetActive(false);
         editor.SetActive(false);
     }
     public void OnCreateGamePointerEnter()
     {
-        Debug.Log("CreateGame");
         joinGame.SetActive(false);
         createGame.SetActive(true);
         editor.SetActive(false);
     }
     public void OnEditorPointerEnter()
     {
-        Debug.Log("PlayerEditor");
         joinGame.SetActive(false);
         createGame.SetActive(false);
         editor.SetActive(true);
@@ -80,14 +84,48 @@ public class MainMenuUIController : MonoBehaviour
     {
         CheckInputEmptyness();
         Debug.Log("Joining to "+inp_ip.text+":"+inp_port.text+" as "+inp_playerName.text+".");
+        
+        NetworkFeedback netFeed = _networkManager.ConnectToServer(inp_ip.text, inp_port.text);
+    
+        if (netFeed == NetworkFeedback.CONNECTION_SUCCESS)
+        {
+            txt_feedback.text = "Waiting for the host to start";
+        }
+        else if (netFeed == NetworkFeedback.SERVER_ERROR)
+        {
+            txt_feedback.text = "Error connecting to the server!";
+        }
+        btn_joinCancel.gameObject.SetActive(true);
+    }
+
+    public void OnJoinCancelClick()
+    {
+        _networkManager.ForceConnectionClose();
+        txt_feedback.text = "";
+        btn_joinCancel.gameObject.SetActive(false);
     }
     #endregion
 
     #region CreateGame
     public void OnCreateClick()
     {
-        Debug.Log("Create");
         btn_startGame.interactable = true;
+
+        NetworkFeedback netFeed = _networkManager.StartServer();
+
+        if (netFeed == NetworkFeedback.SERVER_SUCCESS) 
+        {
+            txt_feedback.text = "Online";
+        }
+
+        btn_hostCancel.gameObject.SetActive(true);
+    }
+    public void OnHostCancelClick()
+    {
+        _networkManager.ForceConnectionClose();
+        txt_feedback.text = "";
+        btn_hostCancel.gameObject.SetActive(false);
+        btn_startGame.interactable = false;
     }
     public void OnStartGameClick()
     {
