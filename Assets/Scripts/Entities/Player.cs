@@ -1,22 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public struct PlayerData
+{
+    public Vector3 position;
+}
 
 public class Player : MonoBehaviour
 {
 
     //Player control related
     [HideInInspector]public Vector2 inputVector;
-    private Rigidbody2D _rigidBody;
-    private SpriteRenderer _spriteRenderer;
-    private Animator _animator;
-
+    protected Rigidbody2D _rigidBody;
+    protected SpriteRenderer _spriteRenderer;
+    protected Animator _animator;
 
     //Stats
     public int health = 10;
     public float movementSpeed = 1.0f;
     public float attackSpeed = 1.0f;
     public int baseDamage = 1;
+
+    public PlayerData _playerData;
 
     private void Awake()
     {
@@ -32,45 +40,29 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        
     }
 
     private void FixedUpdate()
     {
-        Movement();
+
     }
 
     private void LateUpdate()
     {
-        HandleAnimation();
+
     }
 
-    //Player Movement
-    #region Movement&Animations
-    private void Movement()
+    public void SetPosition(Vector3 position)
     {
-        inputVector.x = Input.GetAxis("Horizontal");
-        inputVector.y = Input.GetAxis("Vertical");
-
-        _rigidBody.MovePosition(_rigidBody.position + (inputVector.normalized * movementSpeed * Time.fixedDeltaTime));
+        _playerData.position = position;
+        transform.position = _playerData.position;
     }
 
-    private void HandleAnimation()
-    {
-        _animator.SetFloat("Speed", inputVector.magnitude);
+    //public PlayerInfo GetPlayerInfo()
+    //{
+    //    PlayerInfo info = new PlayerInfo(this);
 
-        if (inputVector.x != 0) 
-        {
-            _spriteRenderer.flipX = inputVector.x < 0;
-        }
-    }
-    #endregion
-
-    public PlayerInfo GetPlayerInfo()
-    {
-        PlayerInfo info = new PlayerInfo(this);
-
-        return info;
-    }
+    //    return info;
+    //}
 
 }

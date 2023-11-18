@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 using UnityEngine;
 using System.Threading;
-using System.Text;
 
 public class Client
 {
@@ -20,17 +17,26 @@ public class Client
 
     public bool _connected = false;
     public bool _running = true;
+    public bool _newPackage = false;
 
     public IPAddress _hostIPAddress;
+    private GameInfo _recvInfo = new GameInfo();
 
-    private NetworkManager _networkManager;
+    public GameInfo GetPackage()
+    {
+        if (_newPackage)
+        {
+            _newPackage = false;
+            return _recvInfo;
+        }
+
+        return null;
+    }
 
     public Client(string ip, string port)
     {
         _hostIPAddress = IPAddress.Parse(ip);
         PORT = int.Parse(port);
-
-        _networkManager = NetworkManager.Instance;
     }
 
     public void Initialize()
@@ -54,10 +60,6 @@ public class Client
             Thread recibeThread = new Thread(Recieve);
             recibeThread.Start();
 
-            byte[] data = new byte[1024];
-            data = Encoding.ASCII.GetBytes("Player 2");
-            Send(data);
-
             return NetworkFeedback.CONNECTION_SUCCESS;
         }
         catch (Exception e)
@@ -76,19 +78,8 @@ public class Client
             {
                 int recv = 0;
                 recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
-
-                string msg = Encoding.ASCII.GetString(_bufferReceive, 0, recv);
-
-                Debug.Log("Client Received: " + msg);
-
-                if (msg.Equals("/PacoCanviaALaCoolScene48465645189/"))
-                {
-                    byte[] data = new byte[1024];
-                    data = Encoding.ASCII.GetBytes("/OkayCorazon48465645189/");
-                    Send(data);
-
-                    _networkManager.LoadScene();
-                }
+                _recvInfo =  NetworkManager.Deserialize(_bufferReceive, recv);
+                _newPackage = true;
             }
         }
         catch (System.Exception e)
@@ -108,7 +99,6 @@ public class Client
     public void Send(byte[] data)
     {
         _socket.SendTo(data, data.Length, SocketFlags.None, _ipep);
-        Debug.Log("ClientData Send");
     }
     #endregion
 }

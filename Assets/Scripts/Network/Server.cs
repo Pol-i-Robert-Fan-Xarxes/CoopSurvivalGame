@@ -10,36 +10,37 @@ public class Server
     public int PORT = 9050;
 
     private Socket _socket;
-    private SocketReceiveMessageFromResult _res;
     private IPEndPoint _ipep;
     private EndPoint _remote;
 
     private byte[] _bufferReceive;
-    private ArraySegment<byte> _bufferReceiveSegment;
 
     public bool _connected = true;
     public bool _running = true;
+    public bool _newPackage = false;
 
-    private NetworkManager _networkManager;
-    public bool _changeOrder = false;
+
+    public GameInfo _recvInfo = new GameInfo();
+    public GameInfo GetPackage()
+    {
+        if (_newPackage)
+        {
+            _newPackage = false;
+            return _recvInfo;
+        }
+
+        return null;
+    }
 
     public Server()
     {
-        _networkManager = NetworkManager.Instance;
     }
 
     public void Initialize()
     {
         _bufferReceive = new byte[4096];
-        _bufferReceiveSegment = new(_bufferReceive);
-
         _ipep = new IPEndPoint(IPAddress.Any, 9050);
-
         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-        
-
-
     }
 
     public NetworkFeedback StartServer()
@@ -60,19 +61,10 @@ public class Server
         {
             while (_connected)
             {
-                //DESERIALIZE CLIENT INFO AND UPDATE IT TO GAMEMANAGER'S CLIENT PLAYER
-
                 int recv = 0;
                 recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
-
-                string msg = Encoding.ASCII.GetString(_bufferReceive, 0, recv);
-
-                Debug.Log("Server Received: "+msg);
-
-                if (msg.Equals("/OkayCorazon48465645189/"))
-                {
-                    _changeOrder = true;
-                }
+                _recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
+                _newPackage = true;
             }
         }
         catch(System.Exception e)
@@ -89,14 +81,9 @@ public class Server
     #endregion
 
     #region Send
-    public void Send(byte[]data)
+    public void Send(byte[] data)
     {
-        // SEND GAMEINFO FROM HOST  // OPTIONAL AND GAMEINFO FROM CLIENT IN SERVER
-        //Serialize
-
         _socket.SendTo(data, data.Length, SocketFlags.None, _remote);
-        Debug.Log("ServerData Send");
-
     }
     #endregion
 }

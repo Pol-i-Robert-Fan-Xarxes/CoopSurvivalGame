@@ -20,7 +20,8 @@ public class MainMenuUIController : MonoBehaviour
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI txt_feedback;
 
-    public NetworkManager _networkManager;
+    [SerializeField] private NetworkManager _networkManager;
+    [SerializeField] private GameManager _gameManager;
 
     private void Awake()
     {
@@ -131,6 +132,9 @@ public class MainMenuUIController : MonoBehaviour
         {
             inp_playerName.text = "Player Host";
         }
+
+        _gameManager._gameData._scene = 1;
+
         Debug.Log("Starting a game as " + inp_playerName.text + ".");
     }
     #endregion
