@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4510406135491616298}
   m_Layer: 0
   m_Name: RemotePlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -330,6 +330,9 @@ MonoBehaviour:
   movementSpeed: 8
   attackSpeed: 1
   baseDamage: 1
+  _playerData:
+    position: {x: 0, y: 0, z: 0}
+    dirVector: {x: 0, y: 0}
 --- !u!95 &4510406135491616298
 Animator:
   serializedVersion: 5

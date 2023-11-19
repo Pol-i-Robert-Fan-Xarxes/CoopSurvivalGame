@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 2088617500764825777}
   m_Layer: 0
   m_Name: LocalPlayer
-  m_TagString: Untagged
+  m_TagString: LocalPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -351,3 +351,6 @@ MonoBehaviour:
   movementSpeed: 1
   attackSpeed: 1
   baseDamage: 1
+  _playerData:
+    position: {x: 0, y: 0, z: 0}
+    dirVector: {x: 0, y: 0}

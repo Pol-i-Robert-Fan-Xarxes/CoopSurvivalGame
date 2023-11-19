@@ -7,6 +7,7 @@ using UnityEngine;
 public struct PlayerData
 {
     public Vector3 position;
+    public Vector2 dirVector;
 }
 
 public class Player : MonoBehaviour
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     protected Rigidbody2D _rigidBody;
     protected SpriteRenderer _spriteRenderer;
     protected Animator _animator;
+    private Vector2 _nextPos;
 
     //Stats
     public int health = 10;
@@ -40,11 +42,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        transform.position = _playerData.position;
     }
 
     private void FixedUpdate()
     {
-
+        transform.position = Vector2.Lerp(transform.position, _nextPos, 0.1f);
     }
 
     private void LateUpdate()
@@ -55,7 +58,14 @@ public class Player : MonoBehaviour
     public void SetPosition(Vector3 position)
     {
         _playerData.position = position;
-        transform.position = _playerData.position;
+        _nextPos = _playerData.position;
+        
+    }
+
+    public void SetDirVector(Vector2 dirVector) 
+    {
+        _playerData.dirVector = dirVector;
+        inputVector = _playerData.dirVector;
     }
 
     //public PlayerInfo GetPlayerInfo()
@@ -64,5 +74,10 @@ public class Player : MonoBehaviour
 
     //    return info;
     //}
+
+    public virtual void Movement()
+    {
+        _rigidBody.MovePosition(_rigidBody.position + (_playerData.dirVector.normalized * movementSpeed * Time.fixedDeltaTime));
+    }
 
 }

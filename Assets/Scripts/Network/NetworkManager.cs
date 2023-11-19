@@ -27,7 +27,7 @@ public class NetworkManager : MonoBehaviour
     public Client _client;
 
     //Send Decider
-    public float sendBatchTime = 0.01f;
+    public float sendBatchTime = 0.001f;
     private float currentTime = 0.0f;
 
     private void Awake()
@@ -75,7 +75,7 @@ public class NetworkManager : MonoBehaviour
     private void ReadPackage()
     {
         if (_isHost && _server != null && _server._running) 
-        {
+        {         
             _gameManager.Unpackage(_server.GetPackage(), true);
         }
         else if (!_isHost && _client != null && _client._running) 
@@ -120,13 +120,11 @@ public class NetworkManager : MonoBehaviour
     {
         if (_isHost)
         {
-            GameInfo aux = _gameManager.Package(true);
-
             _server.Send(Serialize(_gameManager.Package(true)));
         }
         else
         {
-            _gameManager.Package(false);
+            //_gameManager.Package(false);
             _client.Send(Serialize(_gameManager.Package(false)));
         }
     }
@@ -137,6 +135,7 @@ public class NetworkManager : MonoBehaviour
 
     public byte[] Serialize(GameInfo gameInfo)
     {
+        
         string json = JsonUtility.ToJson(gameInfo);
         return Encoding.ASCII.GetBytes(json);
     }
@@ -144,6 +143,7 @@ public class NetworkManager : MonoBehaviour
     public static GameInfo Deserialize(byte[] data, int size)
     {
         string json = Encoding.ASCII.GetString(data, 0, size);
+        Debug.Log("AFTER DESERIALIZE JSON -> " + json);
         return JsonUtility.FromJson<GameInfo>(json);
     }
 
