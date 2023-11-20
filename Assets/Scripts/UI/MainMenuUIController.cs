@@ -15,13 +15,21 @@ public class MainMenuUIController : MonoBehaviour
     [Header("Buttons (some)")]
     [SerializeField] private Button btn_startGame;
     [SerializeField] private Button btn_joinCancel;
+    [SerializeField] private Button btn_join;
     [SerializeField] private Button btn_hostCancel;
+    [SerializeField] private Button btn_joinGame;
 
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI txt_feedback;
 
     [SerializeField] private NetworkManager _networkManager;
     [SerializeField] private GameManager _gameManager;
+
+    bool _gameCreated = false;
+    bool _rejoinCDActive = false;
+
+    float _rejoinCDCount = 0;
+    float _rejoinCD = 1.1f;
 
     private void Awake()
     {
@@ -39,7 +47,25 @@ public class MainMenuUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (_gameCreated && _networkManager._server != null) 
+        {
+            if (_networkManager._server._isAPlayerConnected)
+            {
+                btn_startGame.interactable = true;
+                txt_feedback.text = "Online - 2/2";
+            }
+        }
+
+        if (_rejoinCDActive)
+        {
+            _rejoinCDCount += Time.deltaTime;
+            if (_rejoinCDCount > _rejoinCD)
+            {
+                btn_join.interactable = true;
+                _rejoinCDActive = false;
+                _rejoinCDCount = 0;
+            }
+        }
     }
 
     
@@ -47,6 +73,7 @@ public class MainMenuUIController : MonoBehaviour
     #region MainMenu
     public void OnJoinGamePointerEnter()
     {
+        if (!btn_joinGame.interactable) return;
         joinGame.SetActive(true);
         createGame.SetActive(false);
         editor.SetActive(false);
@@ -82,6 +109,8 @@ public class MainMenuUIController : MonoBehaviour
     public void OnJoinClick()
     {
         CheckInputEmptyness();
+
+        _gameManager._gameData._localPlayerName = inp_playerName.text;
         Debug.Log("Joining to "+inp_ip.text+":"+inp_port.text+" as "+inp_playerName.text+".");
         
         NetworkFeedback netFeed = _networkManager.ConnectToServer(inp_ip.text, inp_port.text);
@@ -95,6 +124,7 @@ public class MainMenuUIController : MonoBehaviour
             txt_feedback.text = "Error connecting to the server!";
         }
         btn_joinCancel.gameObject.SetActive(true);
+        btn_join.gameObject.SetActive(false);
     }
 
     public void OnJoinCancelClick()
@@ -102,36 +132,44 @@ public class MainMenuUIController : MonoBehaviour
         _networkManager.ForceConnectionClose();
         txt_feedback.text = "";
         btn_joinCancel.gameObject.SetActive(false);
+        btn_join.gameObject.SetActive(true);
+        btn_join.interactable = false;
+        _rejoinCDActive = true;
     }
     #endregion
 
     #region CreateGame
     public void OnCreateClick()
     {
-        btn_startGame.interactable = true;
+        _gameCreated = true;
+        // btn_startGame.interactable = true;
+        btn_joinGame.interactable = false;
 
         NetworkFeedback netFeed = _networkManager.StartServer();
 
         if (netFeed == NetworkFeedback.SERVER_SUCCESS) 
         {
-            txt_feedback.text = "Online";
+            txt_feedback.text = "Online - 1/2";
         }
 
         btn_hostCancel.gameObject.SetActive(true);
     }
     public void OnHostCancelClick()
     {
+        _gameCreated = false;
         _networkManager.ForceConnectionClose();
         txt_feedback.text = "";
         btn_hostCancel.gameObject.SetActive(false);
         btn_startGame.interactable = false;
+        btn_joinGame.interactable = true;
     }
     public void OnStartGameClick()
     {
         if (string.IsNullOrEmpty(inp_playerName.text))
         {
-            inp_playerName.text = "Player Host";
+            inp_playerName.text = "Player 1";
         }
+        _gameManager._gameData._localPlayerName = inp_playerName.text;
 
         _gameManager._gameData._scene = 1;
 
@@ -153,7 +191,7 @@ public class MainMenuUIController : MonoBehaviour
 
         if (string.IsNullOrEmpty(inp_playerName.text))
         {
-            inp_playerName.text = "Player Client";
+            inp_playerName.text = "Player 2";
         }
     }
 }

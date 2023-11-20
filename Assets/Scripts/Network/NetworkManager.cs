@@ -107,10 +107,12 @@ public class NetworkManager : MonoBehaviour
         if (_isHost)
         { //Server
             _server._connected = false;
+            _server = null;
         }
         else
         { //Client
             _client._connected = false;
+            _client = null;
         }
         currentTime = 0;
     }
@@ -143,7 +145,6 @@ public class NetworkManager : MonoBehaviour
     public static GameInfo Deserialize(byte[] data, int size)
     {
         string json = Encoding.ASCII.GetString(data, 0, size);
-        Debug.Log("AFTER DESERIALIZE JSON -> " + json);
         return JsonUtility.FromJson<GameInfo>(json);
     }
 

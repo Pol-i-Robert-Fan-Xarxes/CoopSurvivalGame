@@ -2,15 +2,13 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [Serializable]
 public struct GameData
 {
-    public GameData(bool pause, int scene)
-    {
-        _isPaused = pause;
-        _scene = scene;
-    }
+    public string _localPlayerName;
+    public string _remotePlayerName;
 
     //Flags
     public bool _isPaused;
@@ -74,23 +72,32 @@ public class GameManager : MonoBehaviour
 
     public void LoadPlayers()
     {
-        if (_gameData._scene == 1 &&  !_playersLoaded)
+        if (_gameData._scene == 1 && !_playersLoaded)
         {
+            int i = 0;
             if (_localPlayer == null)
             {
                 GameObject lp = GameObject.FindGameObjectWithTag("LocalPlayer");
                 _localPlayer = lp.GetComponent<LocalPlayer>();
-                Debug.Log("Missing local");
+            }
+            else
+            {
+                _localPlayer.GetComponentInChildren<Text>().text = _gameData._localPlayerName;
+                i += 1;
             }
 
             if (_remotePlayer == null)
             {
                 GameObject rp = GameObject.FindGameObjectWithTag("Player");
                 _remotePlayer = rp.GetComponent<Player>();
-                Debug.Log("Missing remote");
+            }
+            else
+            {
+                _remotePlayer.GetComponentInChildren<Text>().text = _gameData._remotePlayerName;
+                i+= 1;
             }
 
-            _playersLoaded = true;
+            if (i >= 2) _playersLoaded = true;
         }    
     }
 
@@ -123,6 +130,7 @@ public class GameManager : MonoBehaviour
 
     private void UnpackHost(ref GameInfo info)
     {
+        info.UnpackGameData(ref _gameData, true);
         if (_remotePlayer != null)
             info.UnpackPlayerData(ref _remotePlayer);
     }
@@ -158,6 +166,7 @@ public class GameManager : MonoBehaviour
 
     private void PackClient()
     {
+        _gameInfo.SetGameData(_gameData);
         if (_localPlayer != null)
             _gameInfo.SetPlayerData(_localPlayer._playerData);
     }

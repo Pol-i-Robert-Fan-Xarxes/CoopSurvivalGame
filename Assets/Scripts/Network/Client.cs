@@ -45,8 +45,8 @@ public class Client
         _bufferReceiveSegment = new(_bufferReceive);
 
         _ipep = new IPEndPoint(_hostIPAddress, PORT);
-
         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        _remote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
     }
 
     public NetworkFeedback ConnectToHost()
@@ -54,17 +54,28 @@ public class Client
         try
         {
             _socket.Connect(_ipep);
-            _remote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
             _connected = true;
 
-            Thread recibeThread = new Thread(Recieve);
-            recibeThread.Start();
+            // Start the receive thread
+            Thread receiveThread = new Thread(Recieve);
+            receiveThread.Start();
 
             return NetworkFeedback.CONNECTION_SUCCESS;
         }
-        catch (Exception e)
+        catch (SocketException ex)
         {
-            Debug.LogError($"Error connecting to the server: {e.Message}");
+            if (ex.SocketErrorCode == SocketError.HostNotFound)
+            {
+                Debug.LogError("Host not found. Check the server address and try again.");
+            }
+            else if (ex.SocketErrorCode == SocketError.ConnectionRefused)
+            {
+                Debug.LogError("Connection refused. The server may not be running or is unreachable.");
+            }
+            else
+            {
+                Debug.LogError($"Error connecting to the server: {ex.Message}");
+            }
             return NetworkFeedback.CONNECTION_ERROR;
         }
     }
@@ -76,21 +87,38 @@ public class Client
         {
             while (_connected)
             {
-                int recv = 0;
-                recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
-                _recvInfo =  NetworkManager.Deserialize(_bufferReceive, recv);
-                _newPackage = true;
+                try
+                {
+                    int recv = 0;
+                    recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
+                    _recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
+                    _newPackage = true;
+                }
+                catch (SocketException ex)
+                {
+                    if (ex.SocketErrorCode == SocketError.ConnectionReset)
+                    {
+                        Debug.Log("Couldn't connect to a host server.");
+                        Thread.Sleep(1000);
+                        Initialize();
+                        _socket.Connect(_ipep);
+                    }
+                    else
+                    {
+                        Debug.Log("Recieve Thread Error: " + ex.Message);
+                    }
+                }
             }
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
-            Debug.Log("Recibe Thread Error: " + e.Message);
+            Debug.LogError("Receive Thread Error: " + e.Message);
         }
         finally
         {
             _socket.Close();
             _running = false;
-            Debug.Log("Client Recibe closed!");
+            Debug.Log("Client Recieve thread closed!");
         }
     }
     #endregion
@@ -98,7 +126,14 @@ public class Client
     #region Send
     public void Send(byte[] data)
     {
-        _socket.SendTo(data, data.Length, SocketFlags.None, _ipep);
+        try
+        {
+            _socket.SendTo(data, data.Length, SocketFlags.None, _ipep);
+        }
+        catch (SocketException ex)
+        {
+
+        }
     }
     #endregion
 }

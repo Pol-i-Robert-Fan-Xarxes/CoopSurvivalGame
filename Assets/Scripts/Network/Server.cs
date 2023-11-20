@@ -19,6 +19,8 @@ public class Server
     public bool _running = true;
     public bool _newPackage = false;
 
+    public int reciveTimeout = 100;
+    public bool _isAPlayerConnected = false;
 
     public GameInfo _recvInfo = new GameInfo();
     public GameInfo GetPackage()
@@ -57,33 +59,60 @@ public class Server
     #region Recieve
     private void Recieve()
     {
-        try
-        {
+        try { 
             while (_connected)
             {
-                int recv = 0;
-                recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
-                _recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
-                _newPackage = true;
+                _socket.ReceiveTimeout = reciveTimeout;
+                try { 
+                    int recv = 0;
+                    recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
+
+                    _recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
+                    _newPackage = true;
+                }
+                catch(SocketException ex)
+                {
+                    if (ex.SocketErrorCode == SocketError.WouldBlock ||
+                        ex.SocketErrorCode == SocketError.TimedOut)
+                    {
+                        // No data received within the timeout, continue the loop
+                        continue;
+                    }
+                    else
+                    {
+                        // Handle other socket exceptions
+                        Debug.LogError("SocketException: " + ex.Message);
+                        _connected = false;
+                    }
+                }
             }
         }
-        catch(System.Exception e)
+        catch (Exception e)
         {
-            Debug.Log("Recibe Thread Error: " + e.Message);
+            Debug.LogError("Receive Thread Error: " + e.Message);
         }
         finally
         {
             _socket.Close();
             _running = false;
-            Debug.Log("Server Recibe closed!");
-        } 
+            Debug.Log("Server Recieve thread closed!");
+        }
     }
     #endregion
 
     #region Send
     public void Send(byte[] data)
     {
-        _socket.SendTo(data, data.Length, SocketFlags.None, _remote);
+        try
+        {
+            _socket.SendTo(data, data.Length, SocketFlags.None, _remote);
+            _isAPlayerConnected = true;
+        }
+        catch (SocketException ex)
+        {
+            //Debug.Log("No client to send");
+            _isAPlayerConnected = false;
+        }
     }
     #endregion
 }
