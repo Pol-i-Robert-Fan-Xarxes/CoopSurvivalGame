@@ -24,5 +24,8 @@ public class GameInfo
     public void UnpackPlayerData(ref Player target)
     {
         target.SetPosition(_playerData.position); 
+
+        //target.SetDirVector(_playerData.dirVector);
+        
     }
 }

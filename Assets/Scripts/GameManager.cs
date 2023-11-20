@@ -54,6 +54,14 @@ public class GameManager : MonoBehaviour
     {
         LoadScene();
         LoadPlayers();
+        
+    }
+    private void FixedUpdate()
+    {
+        if (_playersLoaded) 
+        {
+            MovePlayers();
+        }
     }
 
     public void LoadScene()
@@ -70,18 +78,33 @@ public class GameManager : MonoBehaviour
         {
             if (_localPlayer == null)
             {
-                GameObject lp = GameObject.Find("LocalPlayer");
+                GameObject lp = GameObject.FindGameObjectWithTag("LocalPlayer");
                 _localPlayer = lp.GetComponent<LocalPlayer>();
                 Debug.Log("Missing local");
             }
 
             if (_remotePlayer == null)
             {
-                GameObject rp = GameObject.Find("RemotePlayer");
+                GameObject rp = GameObject.FindGameObjectWithTag("Player");
                 _remotePlayer = rp.GetComponent<Player>();
                 Debug.Log("Missing remote");
             }
+
+            _playersLoaded = true;
         }    
+    }
+
+    public void MovePlayers()
+    {
+        if (_localPlayer != null)
+        {
+            _localPlayer.Movement();
+        }
+
+        if (_remotePlayer != null)
+        {
+            _remotePlayer.Movement();
+        }
     }
 
     public void Unpackage(GameInfo info, bool isHost)

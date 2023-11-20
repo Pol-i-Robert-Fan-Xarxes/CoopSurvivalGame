@@ -36,12 +36,13 @@ public class LocalPlayer : Player
 
     //Player Movement
     #region Movement&Animations
-    private void Movement()
+    public override void Movement()
     {
         inputVector.x = Input.GetAxis("Horizontal");
         inputVector.y = Input.GetAxis("Vertical");
+        _playerData.dirVector = inputVector;
 
-        _rigidBody.MovePosition(_rigidBody.position + (inputVector.normalized * movementSpeed * Time.fixedDeltaTime));
+        _rigidBody.MovePosition(_rigidBody.position + (_playerData.dirVector.normalized * movementSpeed * Time.fixedDeltaTime));
     }
 
     private void HandleAnimation()
