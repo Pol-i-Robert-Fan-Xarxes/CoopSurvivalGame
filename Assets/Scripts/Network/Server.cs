@@ -110,7 +110,7 @@ public class Server
         }
         catch (SocketException ex)
         {
-            //Debug.Log("No client to send");
+            
             _isAPlayerConnected = false;
         }
     }

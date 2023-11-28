@@ -42,12 +42,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        transform.position = _playerData.position;
+        //transform.position = _playerData.position;
     }
 
     private void FixedUpdate()
     {
-        transform.position = Vector2.Lerp(transform.position, _nextPos, 0.1f);
+        //transform.position = Vector2.Lerp(transform.position, _nextPos, 0.1f);
     }
 
     private void LateUpdate()
@@ -77,7 +77,8 @@ public class Player : MonoBehaviour
 
     public virtual void Movement()
     {
-        _rigidBody.MovePosition(_rigidBody.position + (_playerData.dirVector.normalized * movementSpeed * Time.fixedDeltaTime));
+        _rigidBody.MovePosition(_rigidBody.position + (_playerData.dirVector.normalized) * movementSpeed * Time.fixedDeltaTime);
+
     }
 
 }
