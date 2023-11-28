@@ -2082,9 +2082,9 @@ RectTransform:
   m_Children:
   - {fileID: 293890342}
   - {fileID: 461436158}
-  - {fileID: 2020361079}
   - {fileID: 667818316}
   - {fileID: 882032808}
+  - {fileID: 2020361079}
   - {fileID: 1805817147}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -2406,8 +2406,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 278.12, y: 0}
-  m_SizeDelta: {x: 557.25, y: 719}
+  m_AnchoredPosition: {x: 120.35, y: 0}
+  m_SizeDelta: {x: 241.71, y: 719}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &472029251
 GameObject:
@@ -4799,7 +4799,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 61}
   m_SizeDelta: {x: 600, y: 190}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &914727728
@@ -4885,7 +4885,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -0.000061035156, w: 0}
+  m_margin: {x: 219.01086, y: 139.23868, z: 220.46118, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -7501,14 +7501,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 2
   m_RegexValue: 
   m_GlobalPointSize: 14
   m_CharacterLimit: 0
@@ -27305,8 +27305,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -110, y: 40}
-  m_SizeDelta: {x: 600, y: 190}
+  m_AnchoredPosition: {x: -109.27481, y: 40}
+  m_SizeDelta: {x: 601.4504, y: 190}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1889144734
 MonoBehaviour:
@@ -27391,7 +27391,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -0.000061035156, w: 0}
+  m_margin: {x: 212.02057, y: 84.80826, z: 210.55823, w: 73.110565}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -28039,8 +28039,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 110, y: 40}
-  m_SizeDelta: {x: 600, y: 190}
+  m_AnchoredPosition: {x: 109.26892, y: 75}
+  m_SizeDelta: {x: 598.5378, y: 190}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1977334050
 MonoBehaviour:
@@ -28125,7 +28125,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -0.000061035156, w: 0}
+  m_margin: {x: 210.55835, y: 115.51468, z: 210.55835, w: 39.479736}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -28363,7 +28363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2020361079
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28376,20 +28376,20 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 684398110}
-  - {fileID: 1418955126}
   - {fileID: 76926421}
   - {fileID: 1719612374}
   - {fileID: 1889144733}
   - {fileID: 1977334049}
+  - {fileID: 684398110}
+  - {fileID: 1418955126}
   - {fileID: 643468782}
   m_Father: {fileID: 403464710}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 120.619995, y: 0}
-  m_SizeDelta: {x: -241.23999, y: 0}
+  m_AnchoredPosition: {x: 120.619995, y: -3.5}
+  m_SizeDelta: {x: -241.24, y: -6.9999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2048329493
 GameObject:
