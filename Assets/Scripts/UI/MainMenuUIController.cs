@@ -66,6 +66,7 @@ public class MainMenuUIController : MonoBehaviour
                 _rejoinCDCount = 0;
             }
         }
+
     }
 
     
@@ -125,6 +126,7 @@ public class MainMenuUIController : MonoBehaviour
         }
         btn_joinCancel.gameObject.SetActive(true);
         btn_join.gameObject.SetActive(false);
+        btn_joinGame.interactable = false;
     }
 
     public void OnJoinCancelClick()
@@ -179,7 +181,7 @@ public class MainMenuUIController : MonoBehaviour
 
     private void CheckInputEmptyness()
     {
-        if(string.IsNullOrEmpty(inp_ip.text))
+        if (string.IsNullOrEmpty(inp_ip.text))
         {
             inp_ip.text = "127.0.0.1";
         }
