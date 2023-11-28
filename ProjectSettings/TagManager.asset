@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Area
   - LocalPlayer
+  - UI Controller
   layers:
   - Default
   - TransparentFX

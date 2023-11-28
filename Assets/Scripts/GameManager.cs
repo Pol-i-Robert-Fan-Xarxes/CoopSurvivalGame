@@ -10,6 +10,13 @@ public struct GameData
     public string _localPlayerName;
     public string _remotePlayerName;
 
+    //Shared player data
+    public int level;
+    public int xp;
+    public int kills;
+
+    public Timer gameTimer;
+
     //Flags
     public bool _isPaused;
     public int _scene;
@@ -24,6 +31,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Player _remotePlayer;
 
     private NetworkManager _networkManager;
+    private GameUIController _gameUiController;
 
     private bool _playersLoaded = false;
 
@@ -52,10 +60,14 @@ public class GameManager : MonoBehaviour
     {
         LoadScene();
         LoadPlayers();
-        
+
+        GameSceneHandler();
+
+        if (Input.GetKeyDown(KeyCode.Space)) { PauseGame(); }
     }
     private void FixedUpdate()
     {
+        if (_gameData._isPaused) return;
         if (_playersLoaded) 
         {
             MovePlayers();
@@ -69,6 +81,48 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(_gameData._scene);
         }
     }
+
+    private void GameSceneHandler()
+    {
+        if (_gameData._scene != 1) return;
+        if (_gameUiController == null)
+        {
+            GameObject go = GameObject.FindGameObjectWithTag("UI Controller");
+            _gameUiController = go.GetComponent<GameUIController>();
+
+            _gameData.gameTimer = new Timer();
+            _gameData.gameTimer.Start();
+        }
+
+        ExecutePause();
+        UpdateTimer();
+
+    }
+
+    private void PauseGame()
+    {
+        if (_gameUiController == null) return;
+        _gameData._isPaused = !_gameData._isPaused;
+    }
+    private void ExecutePause()
+    {
+        if (_gameData._isPaused)
+            _gameData.gameTimer.Pause();
+        else
+            _gameData.gameTimer.Resume();
+
+        _gameUiController.Pause(_gameData._isPaused);
+    }
+
+    private void UpdateTimer()
+    {
+        if (_gameData.gameTimer == null) _gameData.gameTimer = new Timer();
+
+        _gameData.gameTimer.Update();
+        _gameUiController.SetTxtTime(_gameData.gameTimer.GetTime());
+    }
+
+    #region Player Related
 
     public void LoadPlayers()
     {
@@ -113,6 +167,9 @@ public class GameManager : MonoBehaviour
             _remotePlayer.Movement();
         }
     }
+    #endregion
+
+    #region Package Related
 
     public void Unpackage(GameInfo info, bool isHost)
     {
@@ -170,4 +227,6 @@ public class GameManager : MonoBehaviour
         if (_localPlayer != null)
             _gameInfo.SetPlayerData(_localPlayer._playerData);
     }
+
+    #endregion
 }
