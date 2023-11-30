@@ -55,7 +55,7 @@ public class NetworkManager : MonoBehaviour
         if (!_isHost && _client != null)
             if (!_client._running) _client = null;
 
-        SendDecider();
+        Send();
         ReadPackage();
     }
 

@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //transform.position = _playerData.position;
+        transform.position = _playerData.position;
     }
 
     private void FixedUpdate()
@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
 
     public virtual void Movement()
     {
-        _rigidBody.MovePosition(_rigidBody.position + (_playerData.dirVector.normalized) * movementSpeed * Time.fixedDeltaTime);
+        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * movementSpeed * Time.fixedDeltaTime);
 
     }
 
