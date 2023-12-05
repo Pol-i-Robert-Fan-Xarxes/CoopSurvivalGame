@@ -27,8 +27,9 @@ public class NetworkManager : MonoBehaviour
     public Client _client;
 
     //Send Decider
-    public float sendBatchTime = 0.001f;
+    public float sendBatchTime = 0.05f;
     private float currentTime = 0.0f;
+    private Vector3 lastPlayerPos = Vector3.zero;
 
     private void Awake()
     {
@@ -50,11 +51,13 @@ public class NetworkManager : MonoBehaviour
 
     private void Update()
     {
+
         if (_isHost && _server != null)
             if (!_server._running) _server = null;
         if (!_isHost && _client != null)
             if (!_client._running) _client = null;
 
+        //TODO Use send decider
         Send();
         ReadPackage();
     }
@@ -63,12 +66,12 @@ public class NetworkManager : MonoBehaviour
     {
         if (_client == null && _server == null) { return; }
 
-        currentTime += Time.deltaTime;
+        currentTime += 0.01f;
         if( sendBatchTime < currentTime )
         {
-            currentTime = 0;
-
-            Send(); 
+            currentTime = 0.0f;
+            Send();
+            
         }
     }
 

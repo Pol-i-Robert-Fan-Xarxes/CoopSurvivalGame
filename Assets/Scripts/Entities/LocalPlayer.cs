@@ -48,10 +48,12 @@ public class LocalPlayer : Player
     private void HandleAnimation()
     {
         _animator.SetFloat("Speed", inputVector.magnitude);
+        _playerData.speed = inputVector.magnitude;
 
         if (inputVector.x != 0) 
         {
             _spriteRenderer.flipX = inputVector.x < 0;
+            _playerData.flip = _spriteRenderer.flipX;
         }
     }
     #endregion

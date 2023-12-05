@@ -8,6 +8,8 @@ public struct PlayerData
 {
     public Vector3 position;
     public Vector2 dirVector;
+    public bool flip;
+    public float speed;
 }
 
 public class Player : MonoBehaviour
@@ -43,6 +45,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         transform.position = _playerData.position;
+
+        
     }
 
     private void FixedUpdate()
@@ -52,7 +56,7 @@ public class Player : MonoBehaviour
 
     private void LateUpdate()
     {
-
+        
     }
 
     public void SetPosition(Vector3 position)
@@ -60,6 +64,15 @@ public class Player : MonoBehaviour
         _playerData.position = position;
         _nextPos = _playerData.position;
         
+    }
+
+    public void SetAnimData(bool flip,float speed)
+    {
+        _playerData.flip = flip;
+        _playerData.speed = speed;
+
+        _spriteRenderer.flipX = _playerData.flip;
+        _animator.SetFloat("Speed", _playerData.speed);
     }
 
     public void SetDirVector(Vector2 dirVector) 
