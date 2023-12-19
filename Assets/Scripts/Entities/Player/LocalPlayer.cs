@@ -9,6 +9,7 @@ public class LocalPlayer : Player
         _rigidBody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
+        _playerAttackHandler = GetComponent<PlayerAttack>();
     }
 
     void Start()

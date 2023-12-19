@@ -31,12 +31,14 @@ public class Player : MonoBehaviour
     public int baseDamage = 1;
 
     public PlayerData _playerData;
+    public PlayerAttack _playerAttackHandler;
 
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
+        _playerAttackHandler = GetComponent<PlayerAttack>();
     }
 
     void Start()
@@ -53,7 +55,6 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //transform.position = Vector2.Lerp(transform.position, _nextPos, 0.1f);
     }
 
     private void LateUpdate()
@@ -65,6 +66,11 @@ public class Player : MonoBehaviour
     {
         _playerData.dirVector = dirVector;
         inputVector = _playerData.dirVector;
+    }
+
+    public void SetAttackArea(bool attacks)
+    {
+
     }
 
     //public PlayerInfo GetPlayerInfo()
