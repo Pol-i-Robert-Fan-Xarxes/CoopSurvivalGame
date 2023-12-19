@@ -6,6 +6,8 @@ using UnityEngine;
 [Serializable]
 public struct PlayerData
 {
+    public string netId;
+    public string name;
     public Vector3 position;
     public Vector2 dirVector;
     public bool flip;
@@ -39,7 +41,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+        //_playerData = new PlayerData();
     }
 
     void Update()
@@ -57,22 +59,6 @@ public class Player : MonoBehaviour
     private void LateUpdate()
     {
         
-    }
-
-    public void SetPosition(Vector3 position)
-    {
-        _playerData.position = position;
-        _nextPos = _playerData.position;
-        
-    }
-
-    public void SetAnimData(bool flip,float speed)
-    {
-        _playerData.flip = flip;
-        _playerData.speed = speed;
-
-        _spriteRenderer.flipX = _playerData.flip;
-        _animator.SetFloat("Speed", _playerData.speed);
     }
 
     public void SetDirVector(Vector2 dirVector) 
@@ -94,4 +80,25 @@ public class Player : MonoBehaviour
 
     }
 
+    public void UpdateDataFromRemote(PlayerData newData)
+    {
+        SetPosition(newData.position);
+        SetAnimData(newData.flip, newData.speed);
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        _playerData.position = position;
+        _nextPos = _playerData.position;
+
+    }
+
+    public void SetAnimData(bool flip, float speed)
+    {
+        _playerData.flip = flip;
+        _playerData.speed = speed;
+
+        _spriteRenderer.flipX = _playerData.flip;
+        _animator.SetFloat("Speed", _playerData.speed);
+    }
 }

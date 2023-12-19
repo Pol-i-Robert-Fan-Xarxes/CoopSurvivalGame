@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +21,17 @@ public struct GameData
     //Flags
     public bool _isPaused;
     public int _scene;
+
+    //public void SetGameData(GameData gameData)
+    //{
+    //    this = gameData;
+    //}
+
+    public void UnpackGameData(ref GameData newData)
+    {
+        _isPaused = newData._isPaused;
+        _scene = newData._scene;
+    }
 }
 
 public class GameManager : MonoBehaviour
@@ -28,7 +40,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => _instance;
 
     [HideInInspector] public LocalPlayer _localPlayer;
-    [HideInInspector] public Player _remotePlayer;
+    //[HideInInspector] public Player _remotePlayer;
+    [HideInInspector] public List<Player> _remotePlayers;
 
     private NetworkManager _networkManager;
     private GameUIController _gameUiController;
@@ -54,12 +67,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _networkManager = NetworkManager.Instance;
+        _remotePlayers = new List<Player>();
     }
 
     private void Update()
     {
         LoadScene();
-        LoadPlayers();
+        LoadLocalPlayer();
 
         GameSceneHandler();
 
@@ -124,35 +138,39 @@ public class GameManager : MonoBehaviour
 
     #region Player Related
 
-    public void LoadPlayers()
+    public void LoadLocalPlayer()
     {
+        //Load local player
         if (_gameData._scene == 1 && !_playersLoaded)
         {
-            int i = 0;
             if (_localPlayer == null)
             {
                 GameObject lp = GameObject.FindGameObjectWithTag("LocalPlayer");
                 _localPlayer = lp.GetComponent<LocalPlayer>();
             }
-            else
+
+            if (_localPlayer != null)
             {
+                _localPlayer._playerData.name = _gameData._localPlayerName;
+                _localPlayer._playerData.netId = System.Guid.NewGuid().ToString();
                 _localPlayer.GetComponentInChildren<Text>().text = _gameData._localPlayerName;
-                i += 1;
-            }
 
-            if (_remotePlayer == null)
-            {
-                GameObject rp = GameObject.FindGameObjectWithTag("Player");
-                _remotePlayer = rp.GetComponent<Player>();
+                _networkManager.SendLocalPlayer(Action.CREATE, _localPlayer._playerData);
+                _playersLoaded = true;
             }
-            else
-            {
-                _remotePlayer.GetComponentInChildren<Text>().text = _gameData._remotePlayerName;
-                i+= 1;
-            }
+        }
+    }
 
-            if (i >= 2) _playersLoaded = true;
-        }    
+    public void CreateRemotePlayer(PlayerData data)
+    {
+        Debug.Log("Creating remote player");
+        var reference = Resources.Load<Player>("Prefabs/RemotePlayer");
+        Player player = Instantiate(reference, new Vector3(0, 0, 0), Quaternion.identity);
+        //player.GetComponentInChildren().text = _gameData._remotePlayerName[id];
+        player._playerData = data;
+        player.GetComponentInChildren<Text>().text = player._playerData.name;
+
+        _remotePlayers.Add(player);
     }
 
     public void MovePlayers()
@@ -160,73 +178,77 @@ public class GameManager : MonoBehaviour
         if (_localPlayer != null)
         {
             _localPlayer.Movement();
+            _networkManager.SendLocalPlayer(Action.UPDATE, _localPlayer._playerData);
         }
 
-        if (_remotePlayer != null)
+        foreach (var rp in _remotePlayers)
         {
-            _remotePlayer.Movement();
+            if (rp != null)
+            {
+                rp.Movement();
+            }
         }
     }
     #endregion
 
     #region Package Related
 
-    public void Unpackage(GameInfo info, bool isHost)
-    {
-        if (info == null) return;
+    //public void Unpackage(GameInfo info, bool isHost)
+    //{
+    //    if (info == null) return;
 
-        if (isHost)
-        {
-            UnpackHost(ref info);
-        }
-        else
-        {
-            UnpackClient(ref info);
-        }
-    }
+    //    if (isHost)
+    //    {
+    //        UnpackHost(ref info);
+    //    }
+    //    else
+    //    {
+    //        UnpackClient(ref info);
+    //    }
+    //}
 
-    private void UnpackHost(ref GameInfo info)
-    {
-        info.UnpackGameData(ref _gameData, true);
-        if (_remotePlayer != null)
-            info.UnpackPlayerData(ref _remotePlayer);
-    }
+    //private void UnpackHost(ref GameInfo info)
+    //{
+    //    //info.UnpackGameData(ref _gameData, true);
+    //    if (_remotePlayer != null)
+    //        info.UnpackPlayerData(ref _remotePlayer);
+    //}
 
-    private void UnpackClient(ref GameInfo info)
-    {
-        info.UnpackGameData(ref _gameData);
-        if (_remotePlayer != null)
-            info.UnpackPlayerData(ref _remotePlayer);
-    }
+    //private void UnpackClient(ref GameInfo info)
+    //{
+    //    //info.UnpackGameData(ref _gameData);
+    //    if (_remotePlayer != null)
+    //        info.UnpackPlayerData(ref _remotePlayer);
+    //}
 
-    public GameInfo Package(bool isHost)
-    {
-        if (isHost)
-        {
-            PackHost();
-        }
-        else
-        {
-            PackClient();
-        }
+    //public GameInfo Package(bool isHost)
+    //{
+    //    if (isHost)
+    //    {
+    //        PackHost();
+    //    }
+    //    else
+    //    {
+    //        PackClient();
+    //    }
 
-        return _gameInfo;
-    }
+    //    return _gameInfo;
+    //}
 
-    private void PackHost()
-    {
-        _gameInfo.SetGameData(_gameData);
+    //private void PackHost()
+    //{
+    //    //_gameInfo.SetGameData(_gameData);
 
-        if (_localPlayer != null)
-            _gameInfo.SetPlayerData(_localPlayer._playerData);
-    }
+    //    //if (_localPlayer != null)
+    //    //    _gameInfo.SetPlayerData(_localPlayer._playerData);
+    //}
 
-    private void PackClient()
-    {
-        _gameInfo.SetGameData(_gameData);
-        if (_localPlayer != null)
-            _gameInfo.SetPlayerData(_localPlayer._playerData);
-    }
+    //private void PackClient()
+    //{
+    //    //_gameInfo.SetGameData(_gameData);
+    //    //if (_localPlayer != null)
+    //    //    _gameInfo.SetPlayerData(_localPlayer._playerData);
+    //}
 
     #endregion
 }

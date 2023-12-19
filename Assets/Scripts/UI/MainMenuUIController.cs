@@ -47,14 +47,14 @@ public class MainMenuUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_gameCreated && _networkManager._server != null) 
-        {
-            if (_networkManager._server._isAPlayerConnected)
-            {
+        //if (_gameCreated && _networkManager._server != null) 
+        //{
+        //    if (_networkManager._server._isAPlayerConnected)
+        //    {
                 btn_startGame.interactable = true;
-                txt_feedback.text = "Online - 2/2";
-            }
-        }
+        //        txt_feedback.text = "Online - 2/2";
+        //    }
+        //}
 
         if (_rejoinCDActive)
         {

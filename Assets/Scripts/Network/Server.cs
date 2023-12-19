@@ -3,7 +3,8 @@ using System.Net;
 using System;
 using UnityEngine;
 using System.Threading;
-using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 
 public class Server
 {
@@ -11,28 +12,16 @@ public class Server
 
     private Socket _socket;
     private IPEndPoint _ipep;
-    private EndPoint _remote;
+    private Dictionary<EndPoint, string> _clients;
+    //private EndPoint _remote;
 
     private byte[] _bufferReceive;
 
     public bool _connected = true;
     public bool _running = true;
-    public bool _newPackage = false;
 
     public int reciveTimeout = 100;
     public bool _isAPlayerConnected = false;
-
-    public GameInfo _recvInfo = new GameInfo();
-    public GameInfo GetPackage()
-    {
-        if (_newPackage)
-        {
-            _newPackage = false;
-            return _recvInfo;
-        }
-
-        return null;
-    }
 
     public Server()
     {
@@ -43,12 +32,13 @@ public class Server
         _bufferReceive = new byte[4096];
         _ipep = new IPEndPoint(IPAddress.Any, 9050);
         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        _clients = new Dictionary<EndPoint, string>();
     }
 
     public NetworkFeedback StartServer()
     {
         _socket.Bind(_ipep);
-        _remote = (EndPoint) new IPEndPoint(IPAddress.Any, 0);
+        //_remote = (EndPoint) new IPEndPoint(IPAddress.Any, 0);
 
         Thread recibeThread = new Thread(Recieve);
         recibeThread.Start();
@@ -65,10 +55,18 @@ public class Server
                 _socket.ReceiveTimeout = reciveTimeout;
                 try { 
                     int recv = 0;
-                    recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
+                    EndPoint senderEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
-                    _recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
-                    _newPackage = true;
+                    recv = _socket.ReceiveFrom(_bufferReceive, ref senderEndPoint);
+
+                    if (!_clients.ContainsKey(senderEndPoint))
+                    {
+                        string netId = System.Guid.NewGuid().ToString();
+                        _clients.Add(senderEndPoint, System.Guid.NewGuid().ToString());
+                        Debug.Log(netId);
+                    }
+
+                    NetworkManager.Deserialize(_bufferReceive, recv, _clients[senderEndPoint]);
                 }
                 catch(SocketException ex)
                 {
@@ -101,11 +99,35 @@ public class Server
     #endregion
 
     #region Send
-    public void Send(byte[] data)
+
+    //public void Send(byte[] data, string clientNetID)
+    //{
+    //    try
+    //    {
+    //        if (_clients.ContainsValue(clientNetID)) 
+    //        {
+    //            _socket.SendTo(data, data.Length, SocketFlags.None, _clients.First(clientNetID).Key);
+    //        }
+            
+    //        _isAPlayerConnected = true;
+    //    }
+    //    catch (SocketException ex)
+    //    {
+
+    //        _isAPlayerConnected = false;
+    //    }
+    //}
+
+    public void Broadcast(byte[] data, string exception = "")
     {
         try
         {
-            _socket.SendTo(data, data.Length, SocketFlags.None, _remote);
+            foreach (EndPoint clientEndPoint in _clients.Keys) 
+            {
+                if (_clients[clientEndPoint] == exception) continue; //Skips exception
+
+                _socket.SendTo(data, data.Length, SocketFlags.None, clientEndPoint);
+            }
             _isAPlayerConnected = true;
         }
         catch (SocketException ex)

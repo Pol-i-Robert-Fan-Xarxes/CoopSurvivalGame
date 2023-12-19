@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -16,7 +13,7 @@ public class LocalPlayer : Player
 
     void Start()
     {
-        
+        _playerData = new PlayerData();
     }
 
     void Update()

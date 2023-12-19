@@ -17,21 +17,23 @@ public class Client
 
     public bool _connected = false;
     public bool _running = true;
-    public bool _newPackage = false;
+
+    public bool _helloPackage = false;
+    //public bool _newPackage = false;
 
     public IPAddress _hostIPAddress;
-    private GameInfo _recvInfo = new GameInfo();
+    //private GameInfo _recvInfo = new GameInfo();
 
-    public GameInfo GetPackage()
-    {
-        if (_newPackage)
-        {
-            _newPackage = false;
-            return _recvInfo;
-        }
+    //public GameInfo GetPackage()
+    //{
+    //    if (_newPackage)
+    //    {
+    //        _newPackage = false;
+    //        return _recvInfo;
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     public Client(string ip, string port)
     {
@@ -91,8 +93,9 @@ public class Client
                 {
                     int recv = 0;
                     recv = _socket.ReceiveFrom(_bufferReceive, ref _remote);
-                    _recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
-                    _newPackage = true;
+                    //_recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
+                    NetworkManager.Deserialize(_bufferReceive, recv);
+                    //_newPackage = true;
                 }
                 catch (SocketException ex)
                 {
