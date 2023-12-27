@@ -6,6 +6,7 @@ public class Timer
     private float currentTime;
     
     private bool _isRunning = false;
+    public bool IsRunning => _isRunning;
     public bool _runout = false;
 
     public void Update()
