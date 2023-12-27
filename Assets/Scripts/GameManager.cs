@@ -46,10 +46,10 @@ public class GameManager : MonoBehaviour
     private NetworkManager _networkManager;
     private GameUIController _gameUiController;
 
+    public bool _singlePlayer = false;
     private bool _playersLoaded = false;
 
     public GameData _gameData = new GameData();
-    private GameInfo _gameInfo = new GameInfo();
 
     private void Awake()
     {
@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
+
+            AwakeSceneHandler();
         }
         else
         {
@@ -128,6 +130,13 @@ public class GameManager : MonoBehaviour
         _gameUiController.Pause(_gameData._isPaused);
     }
 
+    public void ExecuteConnectionLost()
+    {
+        _gameUiController.ConnectionLost();
+        _gameData._isPaused = true;
+        _gameData.gameTimer.Pause();
+    }
+
     private void UpdateTimer()
     {
         if (_gameData.gameTimer == null) _gameData.gameTimer = new Timer();
@@ -155,7 +164,10 @@ public class GameManager : MonoBehaviour
                 _localPlayer._playerData.netId = System.Guid.NewGuid().ToString();
                 _localPlayer.GetComponentInChildren<Text>().text = _gameData._localPlayerName;
 
-                _networkManager.SendLocalPlayer(Action.CREATE, _localPlayer._playerData);
+                if (!_singlePlayer)
+                {
+                    _networkManager.SendLocalPlayer(Action.CREATE, _localPlayer._playerData);
+                }
                 _playersLoaded = true;
             }
         }
@@ -250,5 +262,21 @@ public class GameManager : MonoBehaviour
     //    //    _gameInfo.SetPlayerData(_localPlayer._playerData);
     //}
 
+    #endregion
+
+
+    #region Others
+
+    //Aquesta funcio no fa res relacionat amb xarxes.
+    // Solves a problem we have during development, allowing testing the game scene without having to start the game from the main menu.
+    // The game manager is created first when the game starts. If the game starts by the Game scene this method will make the game manager assume that is single player.
+    private void AwakeSceneHandler()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            _singlePlayer = true;
+            _gameData._scene = 1;
+        }
+    }
     #endregion
 }

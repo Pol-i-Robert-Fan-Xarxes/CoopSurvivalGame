@@ -47,15 +47,23 @@ public class MainMenuUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (_gameCreated && _networkManager._server != null) 
-        //{
-        //    if (_networkManager._server._isAPlayerConnected)
-        //    {
-                btn_startGame.interactable = true;
-        //        txt_feedback.text = "Online - 2/2";
-        //    }
-        //}
+        if (_networkManager._client != null) txt_feedback.text = _networkManager._client.feedbackText;
+        //else OnJoinCancelClick();
 
+        if (_networkManager._server != null) txt_feedback.text = _networkManager._server.feedbackText;
+
+        //Server related
+        //Updates the front-end that shows the number of players and the button to start the game (minimum 2 players to play)
+        if (_gameCreated && _networkManager._server != null)
+        {
+            int numConn = 1 + _networkManager._server.GetNumOfClients();
+
+            if (numConn > 1) btn_startGame.interactable = true;
+            else btn_startGame.interactable = false;
+        }
+
+        //Client related
+        // Just a hard coded cooldown for the client Join Game button. 
         if (_rejoinCDActive)
         {
             _rejoinCDCount += Time.deltaTime;
@@ -72,6 +80,20 @@ public class MainMenuUIController : MonoBehaviour
     
 
     #region MainMenu
+    
+    public void OnSinglePlayerClick()
+    {
+        _gameManager._singlePlayer = true;
+        
+        if (string.IsNullOrEmpty(inp_playerName.text))
+        {
+            inp_playerName.text = "Player 1";
+        }
+        _gameManager._gameData._localPlayerName = inp_playerName.text;
+
+        _gameManager._gameData._scene = 1;
+    }
+
     public void OnJoinGamePointerEnter()
     {
         if (!btn_joinGame.interactable) return;
@@ -151,7 +173,9 @@ public class MainMenuUIController : MonoBehaviour
 
         if (netFeed == NetworkFeedback.SERVER_SUCCESS) 
         {
-            txt_feedback.text = "Online - 1/2";
+            _networkManager._server.feedbackText = "Online - " + 
+                (_networkManager._server.GetNumOfClients() + 1) + "/" + 
+                (_networkManager._server.GetMaxClients() + 1);
         }
 
         btn_hostCancel.gameObject.SetActive(true);

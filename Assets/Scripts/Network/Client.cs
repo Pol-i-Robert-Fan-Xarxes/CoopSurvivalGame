@@ -15,25 +15,16 @@ public class Client
     private byte[] _bufferReceive;
     private ArraySegment<byte> _bufferReceiveSegment;
 
-    public bool _connected = false;
-    public bool _running = true;
+    private bool _connected = false;
+    
+    private bool _running = true;
+    public bool IsRunning => _running;
 
-    public bool _helloPackage = false;
-    //public bool _newPackage = false;
+    public bool _helloPackage = false; // Saves if the hello package has been sent
+    public bool _helloBackPackage = false; //Saves if the hello back package has been received
+    public string feedbackText = "";
 
     public IPAddress _hostIPAddress;
-    //private GameInfo _recvInfo = new GameInfo();
-
-    //public GameInfo GetPackage()
-    //{
-    //    if (_newPackage)
-    //    {
-    //        _newPackage = false;
-    //        return _recvInfo;
-    //    }
-
-    //    return null;
-    //}
 
     public Client(string ip, string port)
     {
@@ -51,6 +42,11 @@ public class Client
         _remote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
     }
 
+    public void Shutdown()
+    {
+        _connected = false;
+    }
+
     public NetworkFeedback ConnectToHost()
     {
         try
@@ -59,7 +55,7 @@ public class Client
             _connected = true;
 
             // Start the receive thread
-            Thread receiveThread = new Thread(Recieve);
+            Thread receiveThread = new Thread(Receive);
             receiveThread.Start();
 
             return NetworkFeedback.CONNECTION_SUCCESS;
@@ -82,8 +78,8 @@ public class Client
         }
     }
 
-    #region Recieve
-    private void Recieve()
+    #region Receive
+    private void Receive()
     {
         try
         {
@@ -101,10 +97,20 @@ public class Client
                 {
                     if (ex.SocketErrorCode == SocketError.ConnectionReset)
                     {
-                        Debug.Log("Couldn't connect to a host server.");
-                        Thread.Sleep(1000);
-                        Initialize();
-                        _socket.Connect(_ipep);
+                        if (GameManager._instance._gameData._scene == 0)
+                        { //If the Main menu scene, try to reconnect
+                            feedbackText = "Couldn't connect to a host server.";
+                            Debug.LogAssertion(feedbackText);
+
+                            Thread.Sleep(1000);
+                            Initialize();
+                            _socket.Connect(_ipep);
+                        }
+                        else
+                        { //If in a game, connection lost
+                            feedbackText = "Connection lost with the host";
+                            _connected = false;
+                        }
                     }
                     else
                     {
@@ -138,5 +144,6 @@ public class Client
 
         }
     }
+
     #endregion
 }

@@ -91,10 +91,19 @@ public class NetworkManager : MonoBehaviour
 
     private void Update()
     {
+        //Skip if it's a single player game
+        if (_gameManager._singlePlayer) return;
+
         if (_isHost && _server != null)
             if (!_server._running) _server = null;
         if (!_isHost && _client != null)
-            if (!_client._running) _client = null;
+            if (!_client.IsRunning)
+            {
+                _client = null;
+                _isClient = false;
+                if (_gameManager._gameData._scene == 1) _gameManager.ExecuteConnectionLost();
+            }
+       
 
         //TODO Use send decider
         UpdateReplication();
@@ -132,7 +141,7 @@ public class NetworkManager : MonoBehaviour
         }
         else if (_isClient)
         { //Client
-            _client._connected = false;
+            _client.Shutdown();
             _client = null;
             _isClient = false;
         }
@@ -140,7 +149,7 @@ public class NetworkManager : MonoBehaviour
 
     #region Serialize/Deserialize
 
-    public byte[] Serialize<T>(T data, PackDataType dataType, Action action)
+    public static byte[] Serialize<T>(T data, PackDataType dataType, Action action)
     {
         string json = JsonUtility.ToJson(data);
 
@@ -154,6 +163,7 @@ public class NetworkManager : MonoBehaviour
         return Encoding.ASCII.GetBytes(JsonUtility.ToJson(package));
     }
 
+    //Deserializes and saves the package in a queue
     public static void Deserialize(byte[] data, int size, string originSessionId = "")
     {
         string json = Encoding.ASCII.GetString(data, 0, size);
@@ -168,7 +178,28 @@ public class NetworkManager : MonoBehaviour
 
     #endregion Serialize/Deserialize
 
-#region ReplicationManager
+    // True == Connection Accepted || False == Connection Denied or Server not found
+    public void ClientAwaitConfirmation(float seconds)
+    {
+        Timer timer = new Timer();
+        timer.totalTime = seconds;
+
+        timer.Start();
+        while (timer.IsRunning)
+        {
+            timer.Update();
+
+            if (_client._helloBackPackage)
+            {
+                _client.feedbackText = "Connected to the server";
+                break;
+            }
+        }
+
+        _client.feedbackText = "Server connection rejected or server not found.";
+    }
+
+    #region ReplicationManager
 
     //Unwrapps replication packages
     private void PackageUnwrapper()
@@ -190,7 +221,7 @@ public class NetworkManager : MonoBehaviour
                     }
                 case PackDataType.HELLO:
                     {
-                        UnpackHello(JsonUtility.FromJson<string>(qPair.package.JsonData), qPair.originSessionId);
+                        UnpackHello(JsonUtility.FromJson<string>(qPair.package.JsonData), (Action) qPair.package.Action, qPair.originSessionId);
                         break;
                     }
                 case PackDataType.LOCAL_PLAYER:
@@ -213,6 +244,7 @@ public class NetworkManager : MonoBehaviour
 
         //Only Client
         SendHello();
+        Ping();
 
         //Only Host
         BroadcastGameData();
@@ -239,9 +271,11 @@ public class NetworkManager : MonoBehaviour
     #endregion
 
     #region Hello
+    
+    // Package only sent by clients when they try to connect to a server
     private void SendHello()
     {
-        if (!_isClient) return;
+        if (_isHost) return;
         if (_client._helloPackage) return;
 
         Debug.Log("Hello sent");
@@ -250,16 +284,42 @@ public class NetworkManager : MonoBehaviour
         _client._helloPackage = true;
     }
 
-    //Return it's session Id
-    private void UnpackHello(string hello, string originSessionId)
+    //Only for the server, handles what to do when a hello package is received
+    private void UnpackHello(string hello, Action action, string originSessionId)
     {
         if (_isHost) return;
-        Debug.Log("Hello -> " + hello);
-        if (hello == "Hello")
+
+        if (_isClient)
         {
-            //_server.Send(Serialize(originSessionId, PackDataType.HELLO, originSessionId));
+            Debug.Log("Hello -> " + action.ToString());
+            if (action == Action.DESTROY)
+            { //Rejected connection
+                _client.feedbackText = "Connection rejected by the host";
+                
+            }
+            else if (action == Action.EVENTS)
+            { //Accepted connection
+                _client._helloBackPackage = true;
+                _client.feedbackText = "Waiting host to start";
+            }
+            
+        }
+        else if (_isHost)
+        { //Return hello
+            if (action == Action.EVENTS) // Confirmation sent to client
+            {
+                _server.Send(Serialize("Hello", PackDataType.HELLO, Action.EVENTS), originSessionId);
+            }
         }
     }
+    #endregion
+
+    #region Ping
+    private void Ping()
+    {
+
+    }
+
     #endregion
 
     #region Local Player
@@ -318,5 +378,6 @@ public class NetworkManager : MonoBehaviour
         }
     }
     #endregion
+
 #endregion
 }

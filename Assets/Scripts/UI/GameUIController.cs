@@ -12,6 +12,7 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private Text txt_kills;
 
     [SerializeField] private GameObject obj_pause;
+    [SerializeField] private GameObject obj_ConnectionLost;
 
     // Start is called before the first frame update
     void Start()
@@ -31,8 +32,23 @@ public class GameUIController : MonoBehaviour
         obj_pause.SetActive(value);
     }
 
+    public void ConnectionLost()
+    {
+        obj_ConnectionLost.SetActive(true);
+    }
+
     public void SetTxtTime(string text)
     {
         txt_time.text = text;
+    }
+
+    public void OnExitClick()
+    {
+#if UNITY_EDITOR
+        // This will stop play mode in the Unity Editor
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
