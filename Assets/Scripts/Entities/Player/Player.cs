@@ -28,17 +28,18 @@ public class Player : MonoBehaviour
     public int health = 10;
     public float movementSpeed = 1.0f;
     public float attackSpeed = 1.0f;
-    public int baseDamage = 1;
+    public int baseDamage = 10;
 
     public PlayerData _playerData;
-    public PlayerAttack _playerAttackHandler;
-
+    protected PlayerAttack _playerAttackHandler;
+    
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _playerAttackHandler = GetComponent<PlayerAttack>();
+
     }
 
     void Start()

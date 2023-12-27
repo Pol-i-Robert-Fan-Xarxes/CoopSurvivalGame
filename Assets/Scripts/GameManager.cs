@@ -45,6 +45,13 @@ public class GameManager : MonoBehaviour
 
     private NetworkManager _networkManager;
     private GameUIController _gameUiController;
+    
+    private int _numberOfDeaths = 0;
+    public int numberOfDeaths
+    {
+        get { return _numberOfDeaths; }
+        set { _numberOfDeaths = value; }
+    }
 
     private bool _playersLoaded = false;
 
@@ -62,6 +69,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
     }
 
     void Start()
@@ -134,6 +142,13 @@ public class GameManager : MonoBehaviour
 
         _gameData.gameTimer.Update();
         _gameUiController.SetTxtTime(_gameData.gameTimer.GetTime());
+    }
+
+    public void UpdateKillCounter()
+    {
+        if (_gameUiController == null) return;
+        numberOfDeaths++;
+        _gameUiController.SetTxtKills(numberOfDeaths.ToString());
     }
 
     #region Player Related

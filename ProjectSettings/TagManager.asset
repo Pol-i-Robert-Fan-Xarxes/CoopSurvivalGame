@@ -9,6 +9,8 @@ TagManager:
   - Area
   - LocalPlayer
   - UI Controller
+  - Enemy
+  - AttackArea
   layers:
   - Default
   - TransparentFX

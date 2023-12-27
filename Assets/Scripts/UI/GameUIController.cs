@@ -35,4 +35,9 @@ public class GameUIController : MonoBehaviour
     {
         txt_time.text = text;
     }
+
+    public void SetTxtKills(string text)
+    {
+        txt_kills.text = text;  
+    }
 }

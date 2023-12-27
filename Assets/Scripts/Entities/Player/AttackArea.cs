@@ -9,8 +9,15 @@ public class AttackArea : MonoBehaviour
     {
         damage = gameObject.GetComponentInParent<LocalPlayer>().baseDamage;
     }
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         //DO DAMAGE
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+
+            collision.gameObject.GetComponent<Enemy>().health -= damage;
+
+        }
     }
 }

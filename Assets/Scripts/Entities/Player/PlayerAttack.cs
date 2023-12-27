@@ -17,7 +17,7 @@ public class PlayerAttack : MonoBehaviour
     float currentTime = 0.0f;
     float currentChargeTime = 0.0f;
 
-    //LOCAL PLAYER RELATED
+    //PLAYER RELATED
     private SpriteRenderer _playerSprite;
 
     // Start is called before the first frame update

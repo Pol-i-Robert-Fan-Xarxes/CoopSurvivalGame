@@ -538,7 +538,7 @@ MonoBehaviour:
   health: 10
   movementSpeed: 3
   attackSpeed: 1
-  baseDamage: 1
+  baseDamage: 5
   _playerData:
     netId: 
     name: 
@@ -546,7 +546,6 @@ MonoBehaviour:
     dirVector: {x: 0, y: 0}
     flip: 0
     speed: 0
-  _playerAttackHandler: {fileID: 0}
 --- !u!114 &261073022237367342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,7 +559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackTimer: 0.25
-  chargeTimer: 4
+  chargeTimer: 2
 --- !u!1 &6976318675350517959
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,7 +586,7 @@ Transform:
   m_GameObject: {fileID: 6976318675350517959}
   m_LocalRotation: {x: 0, y: 0.005323218, z: 0, w: 0.9999859}
   m_LocalPosition: {x: -0.1093, y: -0.3157, z: -0.001}
-  m_LocalScale: {x: 1.3234, y: 1, z: 1}
+  m_LocalScale: {x: 1.85, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6982815366337035137}
@@ -658,7 +657,7 @@ GameObject:
   - component: {fileID: 5674023013355569539}
   m_Layer: 0
   m_Name: AttackAreaLeft
-  m_TagString: Untagged
+  m_TagString: AttackArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -723,8 +722,8 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0, y: 0.5}
-      - {x: -0.75, y: 1}
-      - {x: -0.75, y: -1}
+      - {x: -1.25, y: 1}
+      - {x: -1.25, y: -1}
       - {x: 0, y: -0.5}
   m_UseDelaunayMesh: 0
 --- !u!114 &5674023013355569539
@@ -752,7 +751,7 @@ GameObject:
   - component: {fileID: 2856437130380757014}
   m_Layer: 0
   m_Name: AttackAreaRight
-  m_TagString: Untagged
+  m_TagString: AttackArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -817,8 +816,8 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0, y: 0.5}
-      - {x: 0.75, y: 1}
-      - {x: 0.75, y: -1}
+      - {x: 1.25, y: 1}
+      - {x: 1.25, y: -1}
       - {x: 0, y: -0.5}
   m_UseDelaunayMesh: 0
 --- !u!114 &2856437130380757014
