@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 
     //ENEMY RELATED
     private int _health = 20;
-    private int _xp;
+    private int _xp = 2;
     private int _damage = 5;
     [SerializeField] float _speed = 1.0f;
     private Rigidbody2D _rigidBody;
@@ -149,7 +149,7 @@ public class Enemy : MonoBehaviour
     {
         if (_target == null) return;
 
-        Vector3 posPredict = _target.transform.position + new Vector3(_target.inputVector.x, _target.inputVector.y) * _target.movementSpeed * predictTimer;
+        Vector3 posPredict = _target.transform.position + new Vector3(_target.inputVector.x, _target.inputVector.y) * _target._stats.movementSpeed * predictTimer;
 
         _finalDir = posPredict - transform.position;
 
@@ -175,8 +175,9 @@ public class Enemy : MonoBehaviour
     {
         if(health <= 0) 
         {
-
             StartCoroutine(EnemyDead());
+
+            GameManager._instance.AddXp(_xp);
 
             return true;
         }

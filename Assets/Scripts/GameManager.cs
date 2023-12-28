@@ -14,6 +14,7 @@ public struct GameData
     //Shared player data
     public int level;
     public int xp;
+    public int nextLevelXp;
     public int kills;
 
     public Timer gameTimer;
@@ -116,6 +117,11 @@ public class GameManager : MonoBehaviour
 
             _gameData.gameTimer = new Timer();
             _gameData.gameTimer.Start();
+
+            _gameData.xp = 0;
+            _gameData.nextLevelXp = 10;
+            _gameData.level = 1;
+            _gameUiController.UpdateLevelXpUI(_gameData.xp, _gameData.nextLevelXp, _gameData.level);
         }
 
         ExecutePause();
@@ -177,7 +183,7 @@ public class GameManager : MonoBehaviour
             {
                 _localPlayer._playerData.name = _gameData._localPlayerName;
                 _localPlayer._playerData.netId = System.Guid.NewGuid().ToString();
-                _localPlayer.GetComponentInChildren<Text>().text = _gameData._localPlayerName;
+                _localPlayer._txt_name.text = _gameData._localPlayerName;
 
                 if (!_singlePlayer)
                 {
@@ -218,67 +224,27 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region Package Related
+    #region Gameplay related
+    public void AddXp(int xp)
+    {
+        _gameData.xp += xp; 
 
-    //public void Unpackage(GameInfo info, bool isHost)
-    //{
-    //    if (info == null) return;
+        if (_gameData.xp >= _gameData.nextLevelXp)
+        {
+            LevelUp();
+        }
 
-    //    if (isHost)
-    //    {
-    //        UnpackHost(ref info);
-    //    }
-    //    else
-    //    {
-    //        UnpackClient(ref info);
-    //    }
-    //}
+        _gameUiController.UpdateLevelXpUI(_gameData.xp, _gameData.nextLevelXp, _gameData.level);
+    }
 
-    //private void UnpackHost(ref GameInfo info)
-    //{
-    //    //info.UnpackGameData(ref _gameData, true);
-    //    if (_remotePlayer != null)
-    //        info.UnpackPlayerData(ref _remotePlayer);
-    //}
+    private void LevelUp()
+    {
+        _gameData.level++;
 
-    //private void UnpackClient(ref GameInfo info)
-    //{
-    //    //info.UnpackGameData(ref _gameData);
-    //    if (_remotePlayer != null)
-    //        info.UnpackPlayerData(ref _remotePlayer);
-    //}
-
-    //public GameInfo Package(bool isHost)
-    //{
-    //    if (isHost)
-    //    {
-    //        PackHost();
-    //    }
-    //    else
-    //    {
-    //        PackClient();
-    //    }
-
-    //    return _gameInfo;
-    //}
-
-    //private void PackHost()
-    //{
-    //    //_gameInfo.SetGameData(_gameData);
-
-    //    //if (_localPlayer != null)
-    //    //    _gameInfo.SetPlayerData(_localPlayer._playerData);
-    //}
-
-    //private void PackClient()
-    //{
-    //    //_gameInfo.SetGameData(_gameData);
-    //    //if (_localPlayer != null)
-    //    //    _gameInfo.SetPlayerData(_localPlayer._playerData);
-    //}
-
+        _gameData.xp -= _gameData.nextLevelXp;
+        _gameData.nextLevelXp = (int) (_gameData.nextLevelXp * 1.25);
+    }
     #endregion
-
 
     #region Others
 

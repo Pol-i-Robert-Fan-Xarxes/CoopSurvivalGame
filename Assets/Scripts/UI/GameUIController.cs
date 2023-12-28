@@ -26,8 +26,14 @@ public class GameUIController : MonoBehaviour
 
     }
 
+    public void UpdateLevelXpUI(int xp, int maxXp, int level)
+    {
+        txt_lvl.text = "Lv."+ level.ToString();
 
-    public void Pause(bool value)
+        sld_xp.value = ((xp * 100) / maxXp) * 0.01f;
+    }
+
+public void Pause(bool value)
     {
         obj_pause.SetActive(value);
     }

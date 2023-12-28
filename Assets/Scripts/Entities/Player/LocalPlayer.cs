@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class LocalPlayer : Player
 {
@@ -10,11 +10,16 @@ public class LocalPlayer : Player
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _playerAttackHandler = GetComponent<PlayerAttack>();
+        _txt_name = GetComponentInChildren<Text>();
+        _sld_health = GetComponentInChildren<Slider>();
     }
 
     void Start()
     {
         _playerData = new PlayerData();
+
+        //InitStats();
+        SetHealthUI();
     }
 
     void Update()
@@ -40,7 +45,7 @@ public class LocalPlayer : Player
         inputVector.y = Input.GetAxis("Vertical");
         _playerData.dirVector = inputVector;
 
-        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * movementSpeed * Time.fixedDeltaTime);
+        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * _stats.movementSpeed * Time.fixedDeltaTime);
     }
 
     private void HandleAnimation()

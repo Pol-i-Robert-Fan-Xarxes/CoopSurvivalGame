@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [Serializable]
 public struct PlayerData
@@ -14,9 +15,18 @@ public struct PlayerData
     public float speed;
 }
 
+[Serializable]
+public struct PlayerStats
+{
+    public int maxHealth;
+    public int health;
+    public float movementSpeed;
+    public float attackSpeed;
+    public int baseDamage;
+}
+
 public class Player : MonoBehaviour
 {
-
     //Player control related
     [HideInInspector]public Vector2 inputVector;
     protected Rigidbody2D _rigidBody;
@@ -24,13 +34,12 @@ public class Player : MonoBehaviour
     protected Animator _animator;
     private Vector2 _nextPos;
 
-    //Stats
-    public int health = 10;
-    public float movementSpeed = 1.0f;
-    public float attackSpeed = 1.0f;
-    public int baseDamage = 10;
+    //UI
+    public Text _txt_name;
+    public Slider _sld_health;
 
     public PlayerData _playerData;
+    public PlayerStats _stats;
     protected PlayerAttack _playerAttackHandler;
     
     private void Awake()
@@ -39,12 +48,27 @@ public class Player : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _playerAttackHandler = GetComponent<PlayerAttack>();
-
+        _txt_name = GetComponentInChildren<Text>();
+        _sld_health = GetComponentInChildren<Slider>();
     }
 
     void Start()
     {
-        //_playerData = new PlayerData();
+        //InitStats();
+    }
+
+    protected void InitStats()
+    {
+        _stats = new PlayerStats();
+
+        _stats.maxHealth = 10;
+        _stats.health = _stats.maxHealth;
+
+        _stats.movementSpeed = 1.0f;
+        _stats.attackSpeed = 1.0f;
+        _stats.baseDamage = 10;
+
+        SetHealthUI();
     }
 
     void Update()
@@ -74,16 +98,19 @@ public class Player : MonoBehaviour
 
     }
 
-    //public PlayerInfo GetPlayerInfo()
-    //{
-    //    PlayerInfo info = new PlayerInfo(this);
-
-    //    return info;
-    //}
+    public void SetHealth(int health)
+    {
+        _stats.health = health;
+        SetHealthUI();
+    }
+    protected void SetHealthUI()
+    {
+        _sld_health.value = ((_stats.health * 100) / _stats.maxHealth) * 0.01f;
+    }
 
     public virtual void Movement()
     {
-        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * movementSpeed * Time.fixedDeltaTime);
+        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * _stats.movementSpeed * Time.fixedDeltaTime);
 
     }
 

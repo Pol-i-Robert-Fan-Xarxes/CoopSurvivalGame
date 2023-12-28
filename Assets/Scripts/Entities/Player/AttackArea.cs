@@ -7,7 +7,7 @@ public class AttackArea : MonoBehaviour
     int damage = 0;
     private void Awake()
     {
-        damage = gameObject.GetComponentInParent<LocalPlayer>().baseDamage;
+        damage = gameObject.GetComponentInParent<LocalPlayer>()._stats.baseDamage;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
