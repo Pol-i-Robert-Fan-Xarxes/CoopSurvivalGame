@@ -149,8 +149,6 @@ public class PlayerAttack : MonoBehaviour
             attackAreaRight.SetActive(true);
         }
 
-        Debug.Log("SLASH!");
-
     }
 
 }

@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
 
     private NetworkManager _networkManager;
     private GameUIController _gameUiController;
+    public EnemyManager _enemyManager;
     
     private int _numberOfDeaths = 0;
     public int numberOfDeaths
@@ -110,10 +111,12 @@ public class GameManager : MonoBehaviour
     private void GameSceneHandler()
     {
         if (_gameData._scene != 1) return;
-        if (_gameUiController == null)
+        if (_gameUiController == null || _enemyManager == null)
         {
             GameObject go = GameObject.FindGameObjectWithTag("UI Controller");
             _gameUiController = go.GetComponent<GameUIController>();
+
+            _enemyManager = GameObject.FindGameObjectWithTag("Enemy Manager").GetComponent<EnemyManager>();
 
             _gameData.gameTimer = new Timer();
             _gameData.gameTimer.Start();
@@ -175,8 +178,7 @@ public class GameManager : MonoBehaviour
         {
             if (_localPlayer == null)
             {
-                GameObject lp = GameObject.FindGameObjectWithTag("LocalPlayer");
-                _localPlayer = lp.GetComponent<LocalPlayer>();
+                _localPlayer = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<LocalPlayer>();
             }
 
             if (_localPlayer != null)
@@ -197,8 +199,7 @@ public class GameManager : MonoBehaviour
     public void CreateRemotePlayer(PlayerData data)
     {
         Debug.Log("Creating remote player");
-        var reference = Resources.Load<Player>("Prefabs/RemotePlayer");
-        Player player = Instantiate(reference, new Vector3(0, 0, 0), Quaternion.identity);
+        Player player = Instantiate(Resources.Load<Player>("Prefabs/RemotePlayer"), new Vector3(0, 0, 0), Quaternion.identity);
         //player.GetComponentInChildren().text = _gameData._remotePlayerName[id];
         player._playerData = data;
         player.GetComponentInChildren<Text>().text = player._playerData.name;

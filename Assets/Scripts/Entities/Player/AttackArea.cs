@@ -5,7 +5,8 @@ using UnityEngine;
 public class AttackArea : MonoBehaviour
 {
     int damage = 0;
-    private void Awake()
+
+    private void Start()
     {
         damage = gameObject.GetComponentInParent<LocalPlayer>()._stats.baseDamage;
     }

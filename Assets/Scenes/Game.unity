@@ -5800,6 +5800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0125d3db4f158544e9adc4a9de8bb125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isHost: 0
+  _isClient: 0
   _hasSent: 0
 --- !u!4 &988120515
 Transform:
@@ -5847,6 +5849,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _localPlayer: {fileID: 1177106521}
   _remotePlayers: []
+  _enemyManager: {fileID: 0}
   _singlePlayer: 0
   _gameData:
     _localPlayerName: 
@@ -21526,8 +21529,8 @@ GameObject:
   - component: {fileID: 1820741166}
   - component: {fileID: 1820741165}
   m_Layer: 0
-  m_Name: Enemies
-  m_TagString: Untagged
+  m_Name: Enemy Manager
+  m_TagString: Enemy Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21544,7 +21547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a370bb42588722c42b0f967b18a22127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numOfEnemies: 20
+  numOfEnemies: 5
 --- !u!4 &1820741166
 Transform:
   m_ObjectHideFlags: 0

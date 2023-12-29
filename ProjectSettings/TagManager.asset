@@ -11,6 +11,7 @@ TagManager:
   - UI Controller
   - Enemy
   - AttackArea
+  - Enemy Manager
   layers:
   - Default
   - TransparentFX

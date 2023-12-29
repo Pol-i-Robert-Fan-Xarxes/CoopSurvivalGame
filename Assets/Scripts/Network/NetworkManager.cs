@@ -17,7 +17,7 @@ public enum PackDataType
     PING, //Ping to check if still connected
     HELLO, //First message to be sent
     LOCAL_PLAYER, //To send Data from the local Player
-    OTHER_PLAYERS //to send Data from other clients local Player 
+    ENEMY //to send Data from enemies 
 }
 
 public enum Action
@@ -61,8 +61,8 @@ public class NetworkManager : MonoBehaviour
     //private 
 
     //Flags
-    private bool _isHost = false;
-    private bool _isClient = false;
+    public bool _isHost = false;
+    public bool _isClient = false;
     public bool _hasSent = false;
 
     //Objects
@@ -229,9 +229,9 @@ public class NetworkManager : MonoBehaviour
                         UnpackLocalPlayer(JsonUtility.FromJson<PlayerData>(qPair.package.JsonData), qPair.originSessionId, (Action) qPair.package.Action);
                         break;
                     }
-                case PackDataType.OTHER_PLAYERS:
+                case PackDataType.ENEMY:
                     {
-
+                        UnpackEnemy(JsonUtility.FromJson<EnemyData>(qPair.package.JsonData), qPair.originSessionId, (Action)qPair.package.Action);
                         break;
                     }
             }
@@ -359,10 +359,8 @@ public class NetworkManager : MonoBehaviour
                 {
                     foreach (var rp in _gameManager._remotePlayers)
                     {
-                        Debug.Log(rp._playerData.netId+"|"+data.netId + " -> "+_gameManager._remotePlayers.Count);
                         if (rp._playerData.netId == data.netId)
                         {
-                            Debug.Log("Player update!");
                             rp.UpdateDataFromRemote(data);
                             break;
                         }
@@ -379,5 +377,51 @@ public class NetworkManager : MonoBehaviour
     }
     #endregion
 
-#endregion
+    #region Enemy
+    
+    public void SendEnemy(Action action, EnemyData data)
+    {
+        if (_isHost)
+        {
+            _server.Broadcast(Serialize(data, PackDataType.ENEMY, action));
+        }
+
+        if (_isClient)
+        {
+            _client.Send(Serialize(data, PackDataType.ENEMY, action));
+        }
+    }
+    
+    private void UnpackEnemy(EnemyData data, string originNetId, Action action)
+    {
+        switch(action)
+        {
+            case Action.CREATE:
+                {
+                    if (_isClient)
+                    {
+                        //Tell clients to create enemies inside their enemypool and give them the NetId
+                        //_gameManager._enemyManager.InstantiateEnemyClient(data);
+                        GameObject.FindGameObjectWithTag("Enemy Manager").GetComponent<EnemyManager>().InstantiateEnemyClient(data);
+                    }
+                    break;
+                }
+            case Action.UPDATE:
+                {
+                    // Host and Client
+                    // Update all enemy data searching by netid
+                    _gameManager._enemyManager.UpdateRemote(data);
+
+                    if (_isHost)
+                    {
+                        //Broadcast to all other clients
+                        _server.Broadcast(Serialize(data, PackDataType.ENEMY, Action.UPDATE), originNetId);
+                    }
+                    break;
+                }
+        }
+    }
+    #endregion
+
+    #endregion
 }

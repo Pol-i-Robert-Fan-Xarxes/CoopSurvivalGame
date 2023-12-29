@@ -12,14 +12,13 @@ public class LocalPlayer : Player
         _playerAttackHandler = GetComponent<PlayerAttack>();
         _txt_name = GetComponentInChildren<Text>();
         _sld_health = GetComponentInChildren<Slider>();
+
+        InitStats();
     }
 
     void Start()
     {
         _playerData = new PlayerData();
-
-        //InitStats();
-        SetHealthUI();
     }
 
     void Update()
@@ -41,6 +40,7 @@ public class LocalPlayer : Player
     #region Movement&Animations
     public override void Movement()
     {
+        if (GameManager._instance._gameData._isPaused) return;
         inputVector.x = Input.GetAxis("Horizontal");
         inputVector.y = Input.GetAxis("Vertical");
         _playerData.dirVector = inputVector;
@@ -60,12 +60,4 @@ public class LocalPlayer : Player
         }
     }
     #endregion
-
-    //public PlayerInfo GetPlayerInfo()
-    //{
-    //    PlayerInfo info = new PlayerInfo(this);
-
-    //    return info;
-    //}
-
 }

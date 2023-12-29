@@ -50,11 +50,13 @@ public class Player : MonoBehaviour
         _playerAttackHandler = GetComponent<PlayerAttack>();
         _txt_name = GetComponentInChildren<Text>();
         _sld_health = GetComponentInChildren<Slider>();
+
+        InitStats();
     }
 
     void Start()
     {
-        //InitStats();
+        
     }
 
     protected void InitStats()
@@ -64,9 +66,9 @@ public class Player : MonoBehaviour
         _stats.maxHealth = 10;
         _stats.health = _stats.maxHealth;
 
-        _stats.movementSpeed = 1.0f;
+        _stats.movementSpeed = 2.5f;
         _stats.attackSpeed = 1.0f;
-        _stats.baseDamage = 10;
+        _stats.baseDamage = 12;
 
         SetHealthUI();
     }

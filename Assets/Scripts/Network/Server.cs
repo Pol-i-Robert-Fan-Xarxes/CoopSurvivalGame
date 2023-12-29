@@ -29,7 +29,7 @@ public class Server
     private Dictionary<EndPoint, Connection> _clients;
     private Queue<EndPoint> removeClientQueue;
 
-    public int maxClient = 1;
+    public int maxClient = 3;
 
     private byte[] _bufferReceive;
 
@@ -139,7 +139,6 @@ public class Server
             {
                 string netId = System.Guid.NewGuid().ToString(); //temporal netId, the netid is uodated to the one of the character once received.
                 _clients.Add(endPoint, new Connection(endPoint, System.Guid.NewGuid().ToString()));
-                Debug.Log(netId);
                 feedbackText = "Online - " + (GetNumOfClients()+1) + "/" + (GetMaxClients()+1);
             }
             else
@@ -216,7 +215,7 @@ public class Server
 
         }
 
-        Debug.Log("Removed from dictionary");
+        //Debug.Log("Removed from dictionary");
     }
 
     #region Getters/setters

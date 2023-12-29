@@ -1511,6 +1511,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0125d3db4f158544e9adc4a9de8bb125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isHost: 0
+  _isClient: 0
   _hasSent: 0
 --- !u!4 &222774990
 Transform:
@@ -22656,12 +22658,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _localPlayer: {fileID: 0}
   _remotePlayers: []
+  _enemyManager: {fileID: 0}
   _singlePlayer: 0
   _gameData:
     _localPlayerName: 
     _remotePlayerName: 
     level: 0
     xp: 0
+    nextLevelXp: 0
     kills: 0
     _isPaused: 0
     _scene: 0
@@ -28294,7 +28298,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1977334049
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28636,7 +28640,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2020361079
 RectTransform:
   m_ObjectHideFlags: 0
