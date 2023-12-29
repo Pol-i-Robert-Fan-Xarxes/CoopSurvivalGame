@@ -27,6 +27,9 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D _rigidBody;
     private SpriteRenderer _sprite;
     private Animator _animator;
+    private Collider2D _collider;
+    private bool _alive = false;
+    private int _enemType = 0;
 
     public bool _local = false; // Bool that saves if the enemy is a local enemy or a remote enemy
 
@@ -84,6 +87,7 @@ public class Enemy : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody2D>();
         _sprite = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
+        _collider = GetComponent<Collider2D>();
     }
 
     // Start is called before the first frame update
@@ -198,7 +202,7 @@ public class Enemy : MonoBehaviour
     {
         if(health <= 0) 
         {
-            if (!gameObject.active) return true;
+            if (!gameObject.activeSelf) return true;
             StartCoroutine(EnemyDead(broadcast));
 
             return true;
@@ -219,6 +223,7 @@ public class Enemy : MonoBehaviour
         //Desactivar enemic a la pool
         alive = false;
         _animator.SetBool("Dead", true);
+        _collider.enabled = false;
         
         // Broadcast means that it will be sent to other clients
         if (broadcast) NetworkManager._instance.SendEnemy(Action.UPDATE, _enemyData);
@@ -229,6 +234,7 @@ public class Enemy : MonoBehaviour
         GameManager.Instance.UpdateKillCounter();
 
         gameObject.SetActive(false);
+        _collider.enabled = true;
     }
 
     #region Remote data management
