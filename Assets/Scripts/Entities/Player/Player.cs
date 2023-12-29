@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public struct PlayerData
@@ -41,6 +42,10 @@ public class Player : MonoBehaviour
     public PlayerData _playerData;
     public PlayerStats _stats;
     protected PlayerAttack _playerAttackHandler;
+
+    private Color hitColor = Color.red;
+    private Color originalColor = Color.white;
+    private float hitTimer = 0.2f;
     
     private void Awake()
     {
@@ -105,6 +110,14 @@ public class Player : MonoBehaviour
         _stats.health = health;
         SetHealthUI();
     }
+
+    private void SetDamage(int damage)
+    {
+        _stats.health -= damage;
+        SetHealthUI();
+        StartCoroutine(HitPlayerColor());
+    }
+
     protected void SetHealthUI()
     {
         _sld_health.value = ((_stats.health * 100) / _stats.maxHealth) * 0.01f;
@@ -136,5 +149,34 @@ public class Player : MonoBehaviour
 
         _spriteRenderer.flipX = _playerData.flip;
         _animator.SetFloat("Speed", _playerData.speed);
+    }
+
+    private void IsDead()
+    {
+        if(_stats.health <= 0)
+        {
+            GameManager.Instance._gameData._scene = 2;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            SetDamage(collision.gameObject.GetComponent<Enemy>().damage);
+
+            IsDead();
+        }
+    }
+
+    IEnumerator HitPlayerColor()
+    {
+
+        _spriteRenderer.color = hitColor;
+
+        yield return new WaitForSeconds(hitTimer);
+
+        _spriteRenderer.color = originalColor;
+
     }
 }

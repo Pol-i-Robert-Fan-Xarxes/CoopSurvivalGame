@@ -12,6 +12,8 @@ TagManager:
   - Enemy
   - AttackArea
   - Enemy Manager
+  - NetManager
+  - GameManager
   layers:
   - Default
   - TransparentFX
