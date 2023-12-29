@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _localPlayer: {fileID: 0}
   _remotePlayers: []
+  _enemyManager: {fileID: 0}
   _singlePlayer: 0
   _gameData:
     _localPlayerName: 
@@ -1479,6 +1480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0125d3db4f158544e9adc4a9de8bb125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isHost: 0
+  _isClient: 0
   _hasSent: 0
 --- !u!4 &206169841
 Transform:
@@ -7167,7 +7170,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Exit to Menu
+  m_text: Close game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 883fcdb5984def64996355bfde982429, type: 2}
   m_sharedMaterial: {fileID: 8566789763697704643, guid: 883fcdb5984def64996355bfde982429, type: 2}

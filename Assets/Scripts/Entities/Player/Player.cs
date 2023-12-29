@@ -144,6 +144,7 @@ public class Player : MonoBehaviour
 
     public void SetAnimData(bool flip, float speed)
     {
+        if (_spriteRenderer == null) return;
         _playerData.flip = flip;
         _playerData.speed = speed;
 
