@@ -6014,30 +6014,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2088617500764825777, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
-      propertyPath: _stats.health
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2088617500764825777, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
-      propertyPath: _stats.maxHealth
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2088617500764825777, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
-      propertyPath: _stats.baseDamage
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2088617500764825777, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
-      propertyPath: _stats.attackSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2088617500764825777, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
-      propertyPath: _stats.movementSpeed
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 2481834130553828096, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1937912474}
+    - target: {fileID: 3985518642356495456, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
+      propertyPath: m_CallbackLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985518642356495456, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
+      propertyPath: m_ContactCaptureLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 4660337460814721014, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -6049,6 +6037,10 @@ PrefabInstance:
     - target: {fileID: 6401769257765936588, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
       propertyPath: m_Name
       value: LocalPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6401769257765936588, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6982815366337035137, guid: b3e0da7ba7f63b14ab1ef270afa39e21, type: 3}
       propertyPath: m_RootOrder

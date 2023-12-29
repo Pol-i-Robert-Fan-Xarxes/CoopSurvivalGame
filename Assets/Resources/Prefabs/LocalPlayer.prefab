@@ -640,7 +640,7 @@ GameObject:
   - component: {fileID: 9005178049766707901}
   - component: {fileID: 2088617500764825777}
   - component: {fileID: 261073022237367342}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LocalPlayer
   m_TagString: LocalPlayer
   m_Icon: {fileID: 0}
@@ -708,7 +708,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -733657273
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: -548849466, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -816,10 +816,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputVector: {x: 0, y: 0}
-  health: 10
-  movementSpeed: 3
-  attackSpeed: 1
-  baseDamage: 5
+  _txt_name: {fileID: 0}
+  _sld_health: {fileID: 0}
   _playerData:
     netId: 
     name: 
@@ -827,6 +825,12 @@ MonoBehaviour:
     dirVector: {x: 0, y: 0}
     flip: 0
     speed: 0
+  _stats:
+    maxHealth: 10
+    health: 10
+    movementSpeed: 2
+    attackSpeed: 1
+    baseDamage: 10
 --- !u!114 &261073022237367342
 MonoBehaviour:
   m_ObjectHideFlags: 0

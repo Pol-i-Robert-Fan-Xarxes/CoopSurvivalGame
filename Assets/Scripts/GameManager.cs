@@ -157,6 +157,16 @@ public class GameManager : MonoBehaviour
 
         _gameData.gameTimer.Update();
         _gameUiController.SetTxtTime(_gameData.gameTimer.GetTime());
+
+        CheckIfTimerFinished();
+    }
+
+    private void CheckIfTimerFinished()
+    {
+        if(_gameData.gameTimer.GetTime() == "00:00" )
+        {
+            _gameData._scene = 3;
+        }
     }
 
     public void UpdateKillCounter()
@@ -164,6 +174,13 @@ public class GameManager : MonoBehaviour
         if (_gameUiController == null) return;
         numberOfDeaths++;
         _gameUiController.SetTxtKills(numberOfDeaths.ToString());
+    }
+
+    public void SetPlayersLoaded(bool setTo)
+    {
+
+        _playersLoaded = setTo;
+
     }
 
     #region Player Related

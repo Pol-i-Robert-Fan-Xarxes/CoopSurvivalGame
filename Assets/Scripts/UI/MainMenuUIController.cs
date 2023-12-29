@@ -41,6 +41,8 @@ public class MainMenuUIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        _networkManager = GameObject.FindGameObjectWithTag("NetManager").GetComponent<NetworkManager>();
         txt_feedback.text = "";
     }
 
