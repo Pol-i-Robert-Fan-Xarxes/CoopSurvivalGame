@@ -248,13 +248,18 @@ public class Enemy : MonoBehaviour
 
     public void UpdateDataFromRemote(EnemyData newData)
     {
+        health = newData.health;
+        alive = newData.alive;  
+        Die(false);
+
         _enemyData.position = newData.position;
         _enemyData.dirVector = newData.dirVector;
 
-        health = newData.health;
-        alive = newData.alive;
-        if (newData.alive) gameObject.SetActive(true); 
-        Die(false);
+        if (newData.alive)
+        {
+            transform.position = newData.position;
+            gameObject.SetActive(true);
+        }
     }
     #endregion
 }

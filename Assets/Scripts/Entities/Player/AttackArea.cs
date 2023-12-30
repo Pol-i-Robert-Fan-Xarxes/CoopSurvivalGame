@@ -17,8 +17,7 @@ public class AttackArea : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
 
-            collision.gameObject.GetComponent<Enemy>().health -= damage;
-
+            collision.gameObject.GetComponent<Enemy>().Hurt(damage);
         }
     }
 }
