@@ -37,6 +37,7 @@ public class Enemy : MonoBehaviour
     {
         _enemyData.health -= damage;
         NetworkManager._instance.SendEnemy(Action.UPDATE, _enemyData);
+        Die();
     }
 
     public int health 
