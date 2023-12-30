@@ -130,6 +130,7 @@ public class GameManager : MonoBehaviour
         ExecutePause();
         UpdateTimer();
 
+        if (_networkManager._isHost || _singlePlayer) CheckLoseCondition();
     }
 
     private void PauseGame()
@@ -162,6 +163,21 @@ public class GameManager : MonoBehaviour
         _gameUiController.SetTxtTime(_gameData.gameTimer.GetTime());
 
         CheckIfTimerFinished();
+    }
+
+    // Move to lose scene if all players are dead
+    private void CheckLoseCondition()
+    {
+        int i = 0;
+        if (!_localPlayer.gameObject.activeSelf) i++;
+            
+
+        foreach (var rp in _remotePlayers)
+        {
+            if (!rp.gameObject.activeSelf) i++;
+        }
+
+        if (i >= (1 + _remotePlayers.Count)) _gameData._scene = 2;
     }
 
     private void CheckIfTimerFinished()

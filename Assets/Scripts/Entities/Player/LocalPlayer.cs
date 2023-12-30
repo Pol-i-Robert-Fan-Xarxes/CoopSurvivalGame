@@ -13,27 +13,40 @@ public class LocalPlayer : Player
         _txt_name = GetComponentInChildren<Text>();
         _sld_health = GetComponentInChildren<Slider>();
 
-        InitStats();
+        SetHealthUI();
     }
 
     void Start()
     {
-        _playerData = new PlayerData();
+        //_playerData = new PlayerData();
     }
 
     void Update()
     {
+        if (!_spriteRenderer.enabled) return;
         _playerData.position = transform.position;
     }
 
     private void FixedUpdate()
     {
+        if (!_spriteRenderer.enabled) return;
         Movement();
     }
 
     private void LateUpdate()
     {
+        if (!_spriteRenderer.enabled) return;
         HandleAnimation();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            SetDamage(collision.gameObject.GetComponent<Enemy>().damage);
+
+            IsDead();
+        }
     }
 
     //Player Movement
@@ -45,7 +58,7 @@ public class LocalPlayer : Player
         inputVector.y = Input.GetAxis("Vertical");
         _playerData.dirVector = inputVector;
 
-        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * _stats.movementSpeed * Time.fixedDeltaTime);
+        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * _playerData.movementSpeed * Time.fixedDeltaTime);
     }
 
     private void HandleAnimation()

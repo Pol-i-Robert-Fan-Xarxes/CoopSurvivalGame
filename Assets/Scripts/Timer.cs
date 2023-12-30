@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Timer
 {
-    public float totalTime = 1800f; 
+    public float totalTime = 300f; 
     private float currentTime;
     
     private bool _isRunning = false;

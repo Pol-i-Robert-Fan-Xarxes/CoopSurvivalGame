@@ -269,7 +269,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315721665858497671}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 629619f863787ad48b41fd5a296dd381, type: 3}
   m_Name: 
@@ -443,7 +443,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2463426080220217196}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 629619f863787ad48b41fd5a296dd381, type: 3}
   m_Name: 
@@ -938,7 +938,7 @@ Transform:
   - {fileID: 8773016012147938545}
   - {fileID: 2328314426079768777}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8890625330019597247
 SpriteRenderer:
@@ -1067,6 +1067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputVector: {x: 0, y: 0}
+  _deadSprite: {fileID: 0}
   _txt_name: {fileID: 0}
   _sld_health: {fileID: 0}
   _playerData:
@@ -1075,13 +1076,12 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     dirVector: {x: 0, y: 0}
     flip: 0
-    speed: 0
-  _stats:
-    maxHealth: 0
-    health: 0
-    movementSpeed: 0
-    attackSpeed: 0
-    baseDamage: 0
+    speed: 2.5
+    maxHealth: 20
+    health: 20
+    movementSpeed: 3
+    attackSpeed: 1
+    baseDamage: 20
 --- !u!95 &4510406135491616298
 Animator:
   serializedVersion: 5

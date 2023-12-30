@@ -8,7 +8,7 @@ public class AttackArea : MonoBehaviour
 
     private void Start()
     {
-        damage = gameObject.GetComponentInParent<LocalPlayer>()._stats.baseDamage;
+        damage = 12;//gameObject.GetComponentInParent<LocalPlayer>()._playerData.baseDamage;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

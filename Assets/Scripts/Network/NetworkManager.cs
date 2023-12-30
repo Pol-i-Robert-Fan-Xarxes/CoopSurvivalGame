@@ -297,11 +297,6 @@ public class NetworkManager : MonoBehaviour
                 _client.feedbackText = "Connection rejected by the host";
                 
             }
-            else if (action == Action.EVENTS)
-            { //Accepted connection
-                _client._helloBackPackage = true;
-                _client.feedbackText = "Waiting host to start";
-            }
             
         }
         else if (_isHost)

@@ -160,6 +160,7 @@ public class Enemy : MonoBehaviour
 
         foreach (var player in _listOfPlayers)
         {
+            if (player._playerData.health <= 0) continue;
             float distance = Vector3.Distance(this.transform.position, player.transform.position);
 
             if (distance < shortestDist)
@@ -175,7 +176,7 @@ public class Enemy : MonoBehaviour
     {
         if (_target == null) return;
 
-        Vector3 posPredict = _target.transform.position + new Vector3(_target.inputVector.x, _target.inputVector.y) * _target._stats.movementSpeed * predictTimer;
+        Vector3 posPredict = _target.transform.position + new Vector3(_target.inputVector.x, _target.inputVector.y) * _target._playerData.movementSpeed * predictTimer;
 
         _enemyData.dirVector = posPredict - transform.position;
 
@@ -220,13 +221,12 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator EnemyDead(bool broadcast)
     {
-        //Desactivar enemic a la pool
-        alive = false;
-        _animator.SetBool("Dead", true);
-        _collider.enabled = false;
-        
         // Broadcast means that it will be sent to other clients
         if (broadcast) NetworkManager._instance.SendEnemy(Action.UPDATE, _enemyData);
+
+        //Desactivar enemic a la pool
+        _animator.SetBool("Dead", true);
+        _collider.enabled = false;
 
         yield return new WaitForSeconds(deadTimer);
 
@@ -234,6 +234,7 @@ public class Enemy : MonoBehaviour
         GameManager.Instance.UpdateKillCounter();
 
         gameObject.SetActive(false);
+        alive = false;
         _collider.enabled = true;
     }
 

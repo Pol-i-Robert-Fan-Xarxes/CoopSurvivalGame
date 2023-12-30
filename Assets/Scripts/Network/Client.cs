@@ -92,6 +92,7 @@ public class Client
                     //_recvInfo = NetworkManager.Deserialize(_bufferReceive, recv);
                     NetworkManager.Deserialize(_bufferReceive, recv);
                     //_newPackage = true;
+                    feedbackText = "Waiting host";
                 }
                 catch (SocketException ex)
                 {

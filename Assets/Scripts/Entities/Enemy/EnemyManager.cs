@@ -19,7 +19,7 @@ public class EnemyManager : MonoBehaviour
 
         enemyPool = new List<GameObject>();
 
-        if (_networkManager._isHost)
+        if (_networkManager._isHost || _gameManager._singlePlayer)
         {
             InstantiateEnemies();
             StartCoroutine(SpawnEnemies());
@@ -43,13 +43,13 @@ public class EnemyManager : MonoBehaviour
             GameObject enemy = null;
             if(i % 2 == 0)
             {
-                enemy = Instantiate(enemy2, gameObject.transform);
+                enemy = Instantiate(enemy2, new Vector3(50, 50, 0), Quaternion.identity);
                 enemyPool.Add(enemy);
                 enemyPool[i].GetComponent<Enemy>().enemType = 2;
             }
             else
             {
-                enemy = Instantiate(enemy1, gameObject.transform);
+                enemy = Instantiate(enemy1, new Vector3(50, 50, 0), Quaternion.identity);
                 enemyPool.Add(enemy);
                 enemyPool[i].GetComponent<Enemy>().enemType = 1;
             }
@@ -62,13 +62,13 @@ public class EnemyManager : MonoBehaviour
             enemyPool[i].SetActive(false);
 
             //Broadcast enemy creation
-            _networkManager.SendEnemy(Action.CREATE, enemy.GetComponent<Enemy>()._enemyData);
+            if (!_gameManager._singlePlayer) _networkManager.SendEnemy(Action.CREATE, enemy.GetComponent<Enemy>()._enemyData);
         }
     }
 
     public void InstantiateEnemyClient(EnemyData data)
     {
-        GameObject enemy = Instantiate(Resources.Load<GameObject>("Prefabs/Enemy"+data.enemType), gameObject.transform);
+        GameObject enemy = Instantiate(Resources.Load<GameObject>("Prefabs/Enemy"+data.enemType), new Vector3(50, 50, 0), Quaternion.identity);
         enemy.GetComponent<Enemy>()._enemyData = data;
         enemy.SetActive(false);
 
@@ -79,7 +79,7 @@ public class EnemyManager : MonoBehaviour
     {
         foreach (var e in enemyPool)
         {
-            if (e.GetComponent<Enemy>()._enemyData.netId == data.netId)
+            if (e != null && e.GetComponent<Enemy>()._enemyData.netId == data.netId)
             {
                 e.GetComponent<Enemy>().UpdateDataFromRemote(data);
                 break;
@@ -100,7 +100,7 @@ public class EnemyManager : MonoBehaviour
                 SpawnEnemy(enemyPool[result]);
 
                 //Broadcast
-                _networkManager.SendEnemy(Action.UPDATE, enemyPool[result].GetComponent<Enemy>()._enemyData);
+                if (!_gameManager._singlePlayer) _networkManager.SendEnemy(Action.UPDATE, enemyPool[result].GetComponent<Enemy>()._enemyData);
             }
         }
     }
@@ -121,7 +121,7 @@ public class EnemyManager : MonoBehaviour
 
         enemy.SetActive(true);
 
-        NetworkManager._instance.SendEnemy(Action.UPDATE, enemy.GetComponent<Enemy>()._enemyData);
+        if (!_gameManager._singlePlayer) _networkManager.SendEnemy(Action.UPDATE, enemy.GetComponent<Enemy>()._enemyData);
     }
 
     int CheckDeadEnemies()

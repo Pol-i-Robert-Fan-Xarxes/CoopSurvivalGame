@@ -27,9 +27,15 @@ public class WinMenuUIController : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        GameManager.Instance._gameData._scene = 0;
-        GameManager.Instance._singlePlayer = false;
-        GameManager.Instance.SetPlayersLoaded(false);
-        GameManager.Instance.numberOfDeaths = 0;
+        //GameManager.Instance._gameData._scene = 0;
+        //GameManager.Instance._singlePlayer = false;
+        //GameManager.Instance.SetPlayersLoaded(false);
+        //GameManager.Instance.numberOfDeaths = 0;
+#if UNITY_EDITOR
+        // This will stop play mode in the Unity Editor
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }

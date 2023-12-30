@@ -666,7 +666,7 @@ Transform:
   - {fileID: 234465686614524234}
   - {fileID: 6667041233959430322}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4422906716491418718
 SpriteRenderer:
@@ -816,6 +816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputVector: {x: 0, y: 0}
+  _deadSprite: {fileID: 0}
   _txt_name: {fileID: 0}
   _sld_health: {fileID: 0}
   _playerData:
@@ -824,13 +825,12 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     dirVector: {x: 0, y: 0}
     flip: 0
-    speed: 0
-  _stats:
-    maxHealth: 10
-    health: 10
-    movementSpeed: 2
+    speed: 2.5
+    maxHealth: 20
+    health: 20
+    movementSpeed: 3
     attackSpeed: 1
-    baseDamage: 10
+    baseDamage: 20
 --- !u!114 &261073022237367342
 MonoBehaviour:
   m_ObjectHideFlags: 0

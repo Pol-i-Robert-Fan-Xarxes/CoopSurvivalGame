@@ -14,17 +14,13 @@ public struct PlayerData
     public Vector2 dirVector;
     public bool flip;
     public float speed;
-}
 
-[Serializable]
-public struct PlayerStats
-{
     public int maxHealth;
     public int health;
     public float movementSpeed;
     public float attackSpeed;
     public int baseDamage;
-}
+}    
 
 public class Player : MonoBehaviour
 {
@@ -33,6 +29,7 @@ public class Player : MonoBehaviour
     protected Rigidbody2D _rigidBody;
     protected SpriteRenderer _spriteRenderer;
     protected Animator _animator;
+    [SerializeField] protected SpriteRenderer _deadSprite;
     private Vector2 _nextPos;
 
     //UI
@@ -40,7 +37,7 @@ public class Player : MonoBehaviour
     public Slider _sld_health;
 
     public PlayerData _playerData;
-    public PlayerStats _stats;
+
     protected PlayerAttack _playerAttackHandler;
 
     private Color hitColor = Color.red;
@@ -56,7 +53,7 @@ public class Player : MonoBehaviour
         _txt_name = GetComponentInChildren<Text>();
         _sld_health = GetComponentInChildren<Slider>();
 
-        InitStats();
+        SetHealthUI();
     }
 
     void Start()
@@ -64,22 +61,9 @@ public class Player : MonoBehaviour
         
     }
 
-    protected void InitStats()
-    {
-        _stats = new PlayerStats();
-
-        _stats.maxHealth = 10;
-        _stats.health = _stats.maxHealth;
-
-        _stats.movementSpeed = 2.5f;
-        _stats.attackSpeed = 1.0f;
-        _stats.baseDamage = 12;
-
-        SetHealthUI();
-    }
-
     void Update()
     {
+        if (!_spriteRenderer.enabled) return;
         transform.position = _playerData.position;
 
         
@@ -107,25 +91,25 @@ public class Player : MonoBehaviour
 
     public void SetHealth(int health)
     {
-        _stats.health = health;
+        _playerData.health = health;
         SetHealthUI();
     }
 
-    private void SetDamage(int damage)
+    protected void SetDamage(int damage)
     {
-        _stats.health -= damage;
+        _playerData.health -= damage;
         SetHealthUI();
         StartCoroutine(HitPlayerColor());
     }
 
     protected void SetHealthUI()
     {
-        _sld_health.value = ((_stats.health * 100) / _stats.maxHealth) * 0.01f;
+        _sld_health.value = ((_playerData.health * 100) / _playerData.maxHealth) * 0.01f;
     }
 
     public virtual void Movement()
     {
-        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * _stats.movementSpeed * Time.fixedDeltaTime);
+        _rigidBody.MovePosition(_rigidBody.position + inputVector.normalized * _playerData.movementSpeed * Time.fixedDeltaTime);
 
     }
 
@@ -133,6 +117,9 @@ public class Player : MonoBehaviour
     {
         SetPosition(newData.position);
         SetAnimData(newData.flip, newData.speed);
+
+        SetHealth(newData.health);
+        IsDead();
     }
 
     public void SetPosition(Vector3 position)
@@ -152,21 +139,17 @@ public class Player : MonoBehaviour
         _animator.SetFloat("Speed", _playerData.speed);
     }
 
-    private void IsDead()
+    protected void IsDead()
     {
-        if(_stats.health <= 0)
+        if(_playerData.health <= 0)
         {
-            GameManager.Instance._gameData._scene = 2;
-        }
-    }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            SetDamage(collision.gameObject.GetComponent<Enemy>().damage);
+            Instantiate(Resources.Load("Prefabs/Dead"), transform.position, Quaternion.identity, transform.parent);
+            gameObject.SetActive(false);
+            //GameManager.Instance._gameData._scene = 2;
 
-            IsDead();
+            //_spriteRenderer.enabled = false;
+            //_deadSprite.gameObject.SetActive(true);
         }
     }
 
