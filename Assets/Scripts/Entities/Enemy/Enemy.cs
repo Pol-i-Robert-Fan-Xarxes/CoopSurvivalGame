@@ -33,6 +33,12 @@ public class Enemy : MonoBehaviour
 
     public bool _local = false; // Bool that saves if the enemy is a local enemy or a remote enemy
 
+    public void Hurt (int damage)
+    {
+        _enemyData.health -= damage;
+        NetworkManager._instance.SendEnemy(Action.UPDATE, _enemyData);
+    }
+
     public int health 
     {
         get { return _enemyData.health; }
@@ -222,7 +228,7 @@ public class Enemy : MonoBehaviour
     private IEnumerator EnemyDead(bool broadcast)
     {
         // Broadcast means that it will be sent to other clients
-        if (broadcast) NetworkManager._instance.SendEnemy(Action.UPDATE, _enemyData);
+        //if (broadcast) NetworkManager._instance.SendEnemy(Action.UPDATE, _enemyData);
 
         //Desactivar enemic a la pool
         _animator.SetBool("Dead", true);
