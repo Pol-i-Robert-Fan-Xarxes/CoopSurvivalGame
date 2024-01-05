@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -733657273
   m_SortingLayer: 2
-  m_SortingOrder: 2
+  m_SortingOrder: 0
   m_Sprite: {fileID: 613658156, guid: 1bc6097228993f045852159e71f81d5b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -122,7 +122,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8348fb2ae54582147a68abc0b6a38ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1
+  _enemyData:
+    netId: 
+    position: {x: 0, y: 0, z: 0}
+    dirVector: {x: 0, y: 0}
+    health: 0
+    alive: 0
+    enemType: 0
+  _speed: 1.5
+  _local: 0
 --- !u!70 &-5178204065147202793
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

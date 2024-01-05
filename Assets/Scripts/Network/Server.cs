@@ -171,7 +171,7 @@ public class Server
 
             _isAPlayerConnected = true;
         }
-        catch (SocketException ex)
+        catch (SocketException)
         {
 
             _isAPlayerConnected = false;
@@ -191,7 +191,7 @@ public class Server
             }
             _isAPlayerConnected = true;
         }
-        catch (SocketException ex)
+        catch (SocketException)
         {
             
             _isAPlayerConnected = false;

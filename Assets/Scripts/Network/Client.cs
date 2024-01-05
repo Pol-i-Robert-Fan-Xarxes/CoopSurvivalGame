@@ -140,7 +140,7 @@ public class Client
         {
             _socket.SendTo(data, data.Length, SocketFlags.None, _ipep);
         }
-        catch (SocketException ex)
+        catch (SocketException)
         {
 
         }

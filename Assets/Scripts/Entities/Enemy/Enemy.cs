@@ -19,17 +19,17 @@ public class Enemy : MonoBehaviour
 {
     //ENEMY RELATED
     public EnemyData _enemyData;
-    
-    private int _xp = 2;
-    private int _damage = 5;
 
-    [SerializeField] float _speed = 1.0f;
-    private Rigidbody2D _rigidBody;
-    private SpriteRenderer _sprite;
-    private Animator _animator;
-    private Collider2D _collider;
-    private bool _alive = false;
-    private int _enemType = 0;
+    protected int _xp = 2;
+    protected int _damage = 5;
+
+    [SerializeField]protected float _speed = 1.0f;
+    protected Rigidbody2D _rigidBody;
+    protected SpriteRenderer _sprite;
+    protected Animator _animator;
+    protected Collider2D _collider;
+    protected bool _alive = false;
+    protected int _enemType = 0;
 
     public bool _local = false; // Bool that saves if the enemy is a local enemy or a remote enemy
 
@@ -77,14 +77,14 @@ public class Enemy : MonoBehaviour
 
     //ENEMY MOVEMENT RELATED
 
-    List<Player> _listOfPlayers;
-    Player _target;
-    float predictTimer = 5.0f;
+    protected List<Player> _listOfPlayers;
+    protected Player _target;
+    protected float predictTimer = 5.0f;
 
     //HIT RELATED
     Color hitColor = Color.red;
     Color originalColor = Color.white;
-    float hitTimer = 0.20f;
+    protected float hitTimer = 0.20f;
 
     //DEAD RELATED
     float deadTimer = 1.0f;
@@ -100,15 +100,8 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _listOfPlayers = new List<Player>
-        {
-            GameManager.Instance._localPlayer
-        };
-
-        foreach (var player in GameManager.Instance._remotePlayers)
-        {
-            _listOfPlayers.Add(player);
-        }
+        
+        GatherAllPlayers();
 
         _enemyData.dirVector = Vector2.zero;
         //_enemyData.alive = true;
@@ -139,6 +132,19 @@ public class Enemy : MonoBehaviour
         AnimationFlip();
     }
 
+    protected void GatherAllPlayers()
+    {
+        _listOfPlayers = new List<Player>
+        {
+            GameManager.Instance._localPlayer
+        };
+
+        foreach (var player in GameManager.Instance._remotePlayers)
+        {
+            _listOfPlayers.Add(player);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         
@@ -153,7 +159,7 @@ public class Enemy : MonoBehaviour
         
     }
 
-    private void AnimationFlip()
+    protected void AnimationFlip()
     {
         if (_enemyData.dirVector.x != 0)
         {
@@ -161,7 +167,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void DetectClosestPlayer()
+    protected void DetectClosestPlayer()
     {
         float shortestDist = 1000;
 
@@ -179,7 +185,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void PredictPlayerPosition()
+    protected void PredictPlayerPosition()
     {
         if (_target == null) return;
 
@@ -189,9 +195,9 @@ public class Enemy : MonoBehaviour
 
     }
 
-    private void Movement()
+    protected void Movement()
     {
-        if(enemType == 1) 
+        if(enemType == 1 || enemType == 3) 
         {
             _enemyData.dirVector = _target.transform.position - this.transform.position;
         }
@@ -206,7 +212,7 @@ public class Enemy : MonoBehaviour
         NetworkManager._instance.SendEnemy(Action.UPDATE, _enemyData);
     }
 
-    private bool Die(bool broadcast = true) 
+    protected bool Die(bool broadcast = true) 
     {
         if(health <= 0) 
         {
