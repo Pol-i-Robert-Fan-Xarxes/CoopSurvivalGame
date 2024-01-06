@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5503819547986784580}
   - component: {fileID: 8083153253774085684}
   - component: {fileID: 8218066669088135324}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Enemy3
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 375
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
