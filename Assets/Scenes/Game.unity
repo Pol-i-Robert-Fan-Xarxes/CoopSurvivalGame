@@ -21397,7 +21397,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numOfEnemies: 5
+  numOfEnemiesInCircle: 40
   numOfBosses: 2
+  spawn_radius: 15
 --- !u!4 &1820741166
 Transform:
   m_ObjectHideFlags: 0

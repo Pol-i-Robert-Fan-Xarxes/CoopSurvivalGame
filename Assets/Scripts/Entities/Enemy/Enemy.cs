@@ -82,8 +82,6 @@ public class Enemy : MonoBehaviour
     protected float predictTimer = 5.0f;
 
     //HIT RELATED
-    Color hitColor = Color.red;
-    Color originalColor = Color.white;
     protected float hitTimer = 0.20f;
 
     //DEAD RELATED
@@ -151,8 +149,6 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("AttackArea"))
         {
 
-            _sprite.color = hitColor;
-
             StartCoroutine(HitColor());
 
         }
@@ -197,7 +193,7 @@ public class Enemy : MonoBehaviour
 
     protected void Movement()
     {
-        if(enemType == 1 || enemType == 3) 
+        if(enemType == 1 || enemType == 3 || enemType == 4) 
         {
             _enemyData.dirVector = _target.transform.position - this.transform.position;
         }
@@ -226,9 +222,11 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator HitColor()
     {
+        animator.SetTrigger("Hit");
+
         yield return new WaitForSeconds(hitTimer);
 
-        _sprite.color = originalColor;
+        animator.ResetTrigger("Hit");
 
     }
 
