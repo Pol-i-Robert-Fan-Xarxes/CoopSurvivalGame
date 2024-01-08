@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Run 0
+      name: Run 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -157,7 +157,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Run 1
+      name: Run 1_1
       rect:
         serializedVersion: 2
         x: 19
@@ -178,7 +178,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Run 2
+      name: Run 1_2
       rect:
         serializedVersion: 2
         x: 38
@@ -199,7 +199,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Run 3
+      name: Run 1_3
       rect:
         serializedVersion: 2
         x: 0
@@ -220,7 +220,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Run 4
+      name: Run 1_4
       rect:
         serializedVersion: 2
         x: 19
@@ -241,7 +241,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Run 5
+      name: Run 1_5
       rect:
         serializedVersion: 2
         x: 38
@@ -262,7 +262,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stand 0
+      name: Stand 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -283,7 +283,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stand 1
+      name: Stand 1_1
       rect:
         serializedVersion: 2
         x: 19
@@ -304,7 +304,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stand 2
+      name: Stand 1_2
       rect:
         serializedVersion: 2
         x: 38
@@ -325,7 +325,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stand 3
+      name: Stand 1_3
       rect:
         serializedVersion: 2
         x: 0
@@ -346,7 +346,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dead 0
+      name: Dead 1_0
       rect:
         serializedVersion: 2
         x: 19
@@ -367,7 +367,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dead 1
+      name: Dead 1_1
       rect:
         serializedVersion: 2
         x: 38
@@ -398,18 +398,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dead 0: 1375599644
-      Dead 1: 1929632063
-      Run 0: 1363809998
-      Run 1: -188091907
-      Run 2: 847793873
-      Run 3: 937111007
-      Run 4: 1842362625
-      Run 5: -1732568499
-      Stand 0: -150523396
-      Stand 1: -1592204662
-      Stand 2: 1438553564
-      Stand 3: 381631601
+      Dead 1_0: 1375599644
+      Dead 1_1: 1929632063
+      Run 1_0: 1363809998
+      Run 1_1: -188091907
+      Run 1_2: 847793873
+      Run 1_3: 937111007
+      Run 1_4: 1842362625
+      Run 1_5: -1732568499
+      Stand 1_0: -150523396
+      Stand 1_1: -1592204662
+      Stand 1_2: 1438553564
+      Stand 1_3: 381631601
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

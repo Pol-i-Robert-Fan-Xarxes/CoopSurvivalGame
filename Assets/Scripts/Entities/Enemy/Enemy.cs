@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour
         _enemyData.dirVector = Vector2.zero;
         //_enemyData.alive = true;
         //_enemyData.enemType = 1;
-        //transform.position = _enemyData.position;
+        _enemyData.position = transform.position;
     }
 
     // Update is called once per frame

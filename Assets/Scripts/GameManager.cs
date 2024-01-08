@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,7 +8,7 @@ using UnityEngine.UI;
 public struct GameData
 {
     public string _localPlayerName;
-    public string _remotePlayerName;
+    public int skin;
 
     //Shared player data
     public int level;
@@ -22,11 +21,6 @@ public struct GameData
     //Flags
     public bool _isPaused;
     public int _scene;
-
-    //public void SetGameData(GameData gameData)
-    //{
-    //    this = gameData;
-    //}
 
     public void UnpackGameData(ref GameData newData)
     {
@@ -219,6 +213,8 @@ public class GameManager : MonoBehaviour
                 _localPlayer._playerData.name = _gameData._localPlayerName;
                 _localPlayer._playerData.netId = System.Guid.NewGuid().ToString();
                 _localPlayer._txt_name.text = _gameData._localPlayerName;
+                _localPlayer._playerData.skin = _gameData.skin;
+                _localPlayer.SetSkinAnimator();
 
                 if (!_singlePlayer)
                 {

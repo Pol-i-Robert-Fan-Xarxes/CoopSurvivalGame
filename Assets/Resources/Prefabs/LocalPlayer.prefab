@@ -709,7 +709,7 @@ SpriteRenderer:
   m_SortingLayerID: -733657273
   m_SortingLayer: 2
   m_SortingOrder: 3
-  m_Sprite: {fileID: -548849466, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
+  m_Sprite: {fileID: -150523396, guid: 0c187a32c5bde4747be8d00770b07403, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -826,11 +826,13 @@ MonoBehaviour:
     dirVector: {x: 0, y: 0}
     flip: 0
     speed: 2.5
+    skin: 0
     maxHealth: 20
     health: 20
     movementSpeed: 3
     attackSpeed: 1
     baseDamage: 20
+  _animationController: {fileID: 0}
 --- !u!114 &261073022237367342
 MonoBehaviour:
   m_ObjectHideFlags: 0

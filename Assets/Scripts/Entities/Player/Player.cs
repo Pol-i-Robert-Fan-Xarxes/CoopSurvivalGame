@@ -14,6 +14,7 @@ public struct PlayerData
     public Vector2 dirVector;
     public bool flip;
     public float speed;
+    public int skin;
 
     public int maxHealth;
     public int health;
@@ -43,7 +44,9 @@ public class Player : MonoBehaviour
     private Color hitColor = Color.red;
     private Color originalColor = Color.white;
     private float hitTimer = 0.2f;
-    
+
+    public RuntimeAnimatorController _animationController;
+
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -58,7 +61,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+        SetSkinAnimator();
     }
 
     void Update()
@@ -162,5 +165,37 @@ public class Player : MonoBehaviour
 
         _spriteRenderer.color = originalColor;
 
+    }
+
+    public void SetSkinAnimator()
+    {
+        RuntimeAnimatorController skin;
+        switch (_playerData.skin)
+        {
+            case 0:
+            default:
+                {
+                    skin = Resources.Load<RuntimeAnimatorController>("Animations/character_0/Character_0");
+                }
+                break;
+            case 1:
+                {
+                    skin = Resources.Load<RuntimeAnimatorController>("Animations/character_1/Character_1");
+                }
+                break;
+            case 2:
+                {
+                    skin = Resources.Load<RuntimeAnimatorController>("Animations/character_2/Character_2");
+                }
+                break;
+            case 3:
+                {
+                    skin = Resources.Load<RuntimeAnimatorController>("Animations/character_3/Character_3");
+                }
+                break;
+
+        }
+
+        GetComponent<Animator>().runtimeAnimatorController = skin;
     }
 }

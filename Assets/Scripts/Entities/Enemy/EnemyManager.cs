@@ -178,8 +178,8 @@ public class EnemyManager : MonoBehaviour
 
     public void InstantiateEnemyClient(EnemyData data)
     {
-
-        GameObject enemy = Instantiate(Resources.Load<GameObject>("Prefabs/Enemy" + data.enemType), new Vector3(50, 50, 0), Quaternion.identity);
+        var aux  = Resources.Load<GameObject>("Prefabs/Enemy" + data.enemType);
+        GameObject enemy = Instantiate(aux, new Vector3(50, 50, 0), Quaternion.identity, transform);
         enemy.GetComponent<Enemy>()._enemyData = data;
         enemy.SetActive(false);
 

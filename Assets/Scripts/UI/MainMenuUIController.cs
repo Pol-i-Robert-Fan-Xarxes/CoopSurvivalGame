@@ -19,6 +19,11 @@ public class MainMenuUIController : MonoBehaviour
     [SerializeField] private Button btn_hostCancel;
     [SerializeField] private Button btn_joinGame;
 
+    [SerializeField] private Button btn_option0;
+    [SerializeField] private Button btn_option1;
+    [SerializeField] private Button btn_option2;
+    [SerializeField] private Button btn_option3;
+
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI txt_feedback;
 
@@ -44,6 +49,8 @@ public class MainMenuUIController : MonoBehaviour
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         _networkManager = GameObject.FindGameObjectWithTag("NetManager").GetComponent<NetworkManager>();
         txt_feedback.text = "";
+        btn_option0.interactable = false;
+        _gameManager._gameData.skin = 0;
     }
 
     // Update is called once per frame
@@ -127,6 +134,39 @@ public class MainMenuUIController : MonoBehaviour
     #endregion
 
     #region Player Editor
+
+    public void OnSkinClick0()
+    {
+        btn_option0.interactable = false;
+        btn_option1.interactable = true;
+        btn_option2.interactable = true;
+        btn_option3.interactable = true;
+        _gameManager._gameData.skin = 0;
+    }
+    public void OnSkinClick1()
+    {
+        btn_option0.interactable = true;
+        btn_option1.interactable = false;
+        btn_option2.interactable = true;
+        btn_option3.interactable = true;
+        _gameManager._gameData.skin = 1;
+    }
+    public void OnSkinClick2()
+    {
+        btn_option0.interactable = true;
+        btn_option1.interactable = true;
+        btn_option2.interactable = false;
+        btn_option3.interactable = true;
+        _gameManager._gameData.skin = 2;
+    }
+    public void OnSkinClick3()
+    {
+        btn_option0.interactable = true;
+        btn_option1.interactable = true;
+        btn_option2.interactable = true;
+        btn_option3.interactable = false;
+        _gameManager._gameData.skin = 3;
+    }
 
     #endregion
 

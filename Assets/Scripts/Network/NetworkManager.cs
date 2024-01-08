@@ -211,7 +211,8 @@ public class NetworkManager : MonoBehaviour
             {
                 case PackDataType.GAME_DATA:
                     {
-                        UnpackGameData(JsonUtility.FromJson<GameData>(qPair.package.JsonData));
+                        if (qPair.package.JsonData != null && qPair.package.JsonData.Length > 0)
+                            UnpackGameData(JsonUtility.FromJson<GameData>(qPair.package.JsonData));
                         break;
                     }
                 case PackDataType.PING:
