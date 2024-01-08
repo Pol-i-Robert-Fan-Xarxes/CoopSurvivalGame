@@ -33,7 +33,7 @@ public class EnemyBoss : Enemy
     {
         if (GameManager._instance._gameData._isPaused) return;
         if (!alive) return;
-        if (!_local)
+        if (NetworkManager._instance._isClient)
         {
             transform.position = _enemyData.position;
             Die();

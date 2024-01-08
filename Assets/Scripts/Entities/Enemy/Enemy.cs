@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour
         _enemyData.dirVector = Vector2.zero;
         //_enemyData.alive = true;
         //_enemyData.enemType = 1;
-        _enemyData.position = transform.position;
+        //_enemyData.position = transform.position;
     }
 
     // Update is called once per frame
@@ -112,19 +112,20 @@ public class Enemy : MonoBehaviour
     {
         if (GameManager._instance._gameData._isPaused) return;
         if (!alive) return;
-        if (!_local)
+        if (NetworkManager._instance._isClient)
         {
             transform.position = _enemyData.position;
             Die();
         }
         else
         {
-            if (Die() == false)
-            {
-                DetectClosestPlayer();
+                if (Die() == false)
+                {
+                    DetectClosestPlayer();
 
-                Movement();
-            }
+                    Movement();
+                    Debug.Log("Hey mate");
+                }
         }
 
         AnimationFlip();

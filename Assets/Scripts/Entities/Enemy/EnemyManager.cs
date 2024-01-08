@@ -62,33 +62,40 @@ public class EnemyManager : MonoBehaviour
             players.Add(player.transform);
         }
     }
-    
+
     public void UpdateRemote(EnemyData data)
     {
-        foreach (var e in enemyPool)
+        if (data.enemType == 1 || data.enemType == 2)
         {
-            if (e != null && e.GetComponent<Enemy>()._enemyData.netId == data.netId)
+            foreach (var e in enemyPool)
             {
-                e.GetComponent<Enemy>().UpdateDataFromRemote(data);
-                break;
+                if (e != null && e.GetComponent<Enemy>()._enemyData.netId == data.netId)
+                {
+                    e.GetComponent<Enemy>().UpdateDataFromRemote(data);
+                    break;
+                }
             }
         }
-
-        foreach (var e in enemyCircleArea)
+        else if (data.enemType == 4)
         {
-            if (e != null && e.GetComponent<Enemy>()._enemyData.netId == data.netId)
+            foreach (var e in enemyCircleArea)
             {
-                e.GetComponent<Enemy>().UpdateDataFromRemote(data);
-                break;
+                if (e != null && e.GetComponent<Enemy>()._enemyData.netId == data.netId)
+                {
+                    e.GetComponent<Enemy>().UpdateDataFromRemote(data);
+                    break;
+                }
             }
         }
-
-        foreach (var e in bossPool)
+        else if (data.enemType == 3)
         {
-            if (e != null && e.GetComponent<EnemyBoss>()._enemyData.netId == data.netId)
+            foreach (var e in bossPool)
             {
-                e.GetComponent<EnemyBoss>().UpdateDataFromRemote(data);
-                break;
+                if (e != null && e.GetComponent<EnemyBoss>()._enemyData.netId == data.netId)
+                {
+                    e.GetComponent<EnemyBoss>().UpdateDataFromRemote(data);
+                    break;
+                }
             }
         }
     }
@@ -106,12 +113,14 @@ public class EnemyManager : MonoBehaviour
             if (i % 2 == 0)
             {
                 enemy = Instantiate(enemy2, new Vector3(50, 50, 0), Quaternion.identity, transform);
+                enemy.GetComponent<Enemy>()._enemyData.position = transform.position;
                 enemyPool.Add(enemy);
                 enemyPool[i].GetComponent<Enemy>().enemType = 2;
             }
             else
             {
                 enemy = Instantiate(enemy1, new Vector3(50, 50, 0), Quaternion.identity, transform);
+                enemy.GetComponent<Enemy>()._enemyData.position = transform.position;
                 enemyPool.Add(enemy);
                 enemyPool[i].GetComponent<Enemy>().enemType = 1;
             }
@@ -137,6 +146,7 @@ public class EnemyManager : MonoBehaviour
             GameObject enemy = null;
 
             enemy = Instantiate(enemyBoss, new Vector3(50, 50, 0), Quaternion.identity, transform);
+            enemy.GetComponent<Enemy>()._enemyData.position = transform.position;
             bossPool.Add(enemy);
             bossPool[i].GetComponent<EnemyBoss>().enemType = 3;
 
@@ -161,6 +171,7 @@ public class EnemyManager : MonoBehaviour
             GameObject enemy = null;
 
             enemy = Instantiate(enemy4, new Vector3(50, 50, 0), Quaternion.identity,transform);
+            enemy.GetComponent<Enemy>()._enemyData.position = transform.position;
             enemyCircleArea.Add(enemy);
             enemyCircleArea[i].GetComponent<Enemy>().enemType = 4;
 
@@ -180,8 +191,12 @@ public class EnemyManager : MonoBehaviour
     {
         var aux  = Resources.Load<GameObject>("Prefabs/Enemy" + data.enemType);
         GameObject enemy = Instantiate(aux, new Vector3(50, 50, 0), Quaternion.identity, transform);
-        enemy.GetComponent<Enemy>()._enemyData = data;
+        //GameObject enemy = Instantiate(aux);
+        enemy.GetComponent<Enemy>().alive = false;
+        enemy.GetComponent<Enemy>()._local = true;
         enemy.SetActive(false);
+        enemy.GetComponent<Enemy>()._enemyData = data;
+        
 
         if (data.enemType == 3)
         {
